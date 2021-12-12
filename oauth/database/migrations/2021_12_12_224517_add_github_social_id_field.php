@@ -28,7 +28,7 @@ class AddGithubSocialIdField extends Migration
     {
         Schema::table('users', function ($table) {
             $table->dropColumn('github_id');
-            $table->dropColumn('auth_type');
+           $table->dropColumn('auth_type');
          });
     }
 }

@@ -32,7 +32,8 @@ class FacebookController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'fb_id' => $user->id,
-                    'password' => encrypt('admin@123')
+                    'auth_type'=> 'facebook',
+                    'password' => encrypt('admin@123'),
                 ]);
     
                 Auth::login($createUser);
