@@ -1,0 +1,27 @@
+/**
+ * Test for class App.
+ */
+"use strict";
+
+/* global describe it */
+
+var assert = require("assert");
+const Card = require("../app");
+
+describe("Get routes from the API", function() {
+    describe("Get route '/'", function() {
+        it("should respond with 'Hello World'", function() {
+            let app = new App();
+            let res = card.getCard(0);
+
+            assert.equal(res, "♣A");
+        });
+
+        it("should have rank 14", function() {
+            let card = new Card();
+            let res = card.getRank(0);
+
+            assert.equal(res, 14);
+        });
+    });
+});

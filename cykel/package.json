@@ -1,0 +1,39 @@
+{
+  "name": "me-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=html --reporter=text --reporter=clover mocha --timeout 10000",
+    "posttest": "npm run eslint",
+    "start": "nodemon app.js",
+    "production": "NODE_ENV='production' node app.js",
+    "eslint": "eslint .",
+    "clean": "rm -rf build npm-debug.log",
+    "preclean-all": "npm run clean",
+    "clean-all": "rm -rf node_modules"
+  },
+  "author": "jon",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.1",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.3.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.26.1",
+    "javascript-style-guide": "^1.0.1",
+    "mocha": "^9.1.2",
+    "nodemon": "^2.0.13",
+    "nyc": "^15.1.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.5",
+    "utf-8-validate": "^5.0.7"
+  }
+}
