@@ -54,27 +54,5 @@ app.use((err, req, res, next) => {
 
 app.listen(port, async () => {
     console.log(`Example app listening on port ${port}!`);
-    // await bikes.getBikes();
 });
 
-// const wsServer = new ws.WebSocketServer({ noServer: true, path: "/cykel/all" });
-// wsServer.on('connection', socket => {
-//   socket.on('message', message => console.log(message));
-// });
-
-// server.on('upgrade', (request, socket, head) => {
-//     wsServer.handleUpgrade(request, socket, head, socket => {
-//       wsServer.emit('connection', socket, head, request);
-//     });
-// });
-
-// wsServer.on('connection', function connection(ws) {
-//     ws.on('message', function message(data) {
-//         console.log(data);
-//     });
-
-//     // ws.send(JSON.stringify(Object.fromEntries(cykel.myMap)))
-//     ws.send("from server")
-// })
-
-// module.exports = serv;
