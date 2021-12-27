@@ -1,0 +1,12 @@
+@include('header')
+
+<table class="table-auto">
+    @foreach ($customers as $customer)
+    <tr class="bg-emerald-200">
+        <td class="p-8">{{ $customer->first_name }} {{ $customer->last_name }}</td>
+        <td> {{ $customer->phone }}</td>
+        <td> {{ $customer->email }}</td>
+        <td> {{ $customer->saldo }}</td>
+        <td> <a href="/customers/{{$customer->user_id }}"><i class="fas fa-edit"></i></a></td>
+    </tr>
+@endforeach

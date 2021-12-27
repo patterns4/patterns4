@@ -1,26 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import "../../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css";
-@import "../../node_modules/@fortawesome/fontawesome-free/css/regular.css";
-@import "../../node_modules/@fortawesome/fontawesome-free/css/solid.css";
-
 @import url(https://fonts.googleapis.com/css2?family=Lato&family=Noto+Sans+JP:wght@400;500;700;900&display=swap);
 * {
   box-sizing: border-box;
-}
-
-.fa {
-    vertical-align: middle;
-}
-
-#map { 
-  height: 70vh;
-}
-
-input:focus {
-  outline: none;
 }
 
 body {
@@ -46,7 +26,7 @@ h2 {
 }
 
 nav {
-  /* background-color: #039BE5; */
+  background-color: #039BE5;
   color: #E0F2F1;
   display: flex;
   height: 7.5vh;
@@ -65,13 +45,13 @@ nav a {
   justify-content: center;
 }
 
-/* nav a:hover {
+nav a:hover {
   background-color: #0277BD;
 }
 
 .active {
   background-color: #0277BD;
-} */
+}
 
 body {
   height: 100vh;
@@ -187,6 +167,15 @@ td {
   border-bottom: 1px dashed gray;
 }
 
+td:nth-child(1) {
+  width: 70%;
+}
+
+td:nth-child(2) {
+  width: 30%;
+  text-align: right;
+}
+
 table th {
   text-align: left;
 }
@@ -242,4 +231,17 @@ p {
 .round {
   height: 30% !important;
   width: 30% !important;
+}
+
+.chartcontainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.6666666667fr 0.3333333333fr;
+  justify-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.chartdiv {
+  width: 100%;
 }

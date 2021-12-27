@@ -1,28 +1,61 @@
 var express = require('express');
 var router = express.Router();
+const mysql  = require("promise-mysql");
+const config = require("../db/bikes.json");
+const app = require("../app");
+const httpServer = require("http").createServer(app);
+const io = require("socket.io")(httpServer, {
+    path: '/',
+    cors: '*'
+});
 
+// routes and io on connection
 
+httpServer.listen(5000, () => {
+   console.log("Websocket started at port ", 5000)
+});
 
-// variables
+io.on('connection', (socket) => { 
+    console.log('a user connected');
+    io.emit("message", "you're connected");
+    io.emit("bikelocation", JSON.stringify(Object.fromEntries(myMap)));
+});
+
 const myMap = new Map();
 let bikeIdCounter = 1;
 
+(async function() {
+    let db;
+    let bikes;
+    db = await mysql.createConnection(config);
 
+    process.on("exit", () => {
+        db.end();
+    });
+    let sql = `SELECT * FROM bike;`;
+    bikes = await db.query(sql);
+
+    for (const row of bikes) {
+        let bike = new Cykel(row);
+        myMap.set(bike.bikeId, bike);
+    }
+})();
+
+// router.ws("/all", function(ws, req) {
+//     // console.log(myMap);
+//     ws.send(JSON.stringify(Object.fromEntries(myMap)));
+// });
 
 // returns size of bike collection
 router.get('/', function(req, res) {
+    io.emit("message", "till alla connected, från server")
     res.json(myMap.size);
-
-    // const data = {
-    //     data: {
-    //         msg: "Hello World 2"
-    //     }
-    // };
-
-    // res.json(data);
 });
 
-
+router.get("/all/", function(req, res) {
+    // console.log(myMap);
+    res.json(Object.fromEntries(myMap));
+});
 
 //returns bike object with given bikeId
 router.get('/:msg', function(req, res) {
@@ -31,6 +64,7 @@ router.get('/:msg', function(req, res) {
 
     res.json(cykelinfo.info);
 });
+
 
 
 
@@ -145,7 +179,7 @@ router.post('/rent/', (req, res) => { //:msg
 });
 
 
-module.exports = router;
+module.exports = { router: router };
 
 
 
@@ -153,7 +187,7 @@ module.exports = router;
 class Cykel {
     constructor(data) {
         // supplied on creation
-        this.bikeId = data.bikeId;
+        this.bikeId = data.bike_id;
         this.position = data.position;
         this.speed = data.speed;
         this.status = data.status;
@@ -162,16 +196,17 @@ class Cykel {
 
         // used and filled by functions
         // todo: group these for easy clearing and logging
-        this.rentedBy = "";
-        this.destination = ["", ""];
-        this.currentPosition = ["", ""];
-        this.currentDistance = "";
-        this.originalDistance = "";
-        this.rentDateTime = "";
-        this.rentDTString = "";
-        this.arrivalDateTime = "";
-        this.travelTime = "";
-        this.oldPosition = ["", ""];
+    
+        // this.rentedBy = "";
+        // this.destination = ["", ""];
+        // this.currentPosition = ["", ""];
+        // this.currentDistance = "";
+        // this.originalDistance = "";
+        // this.rentDateTime = "";
+        // this.rentDTString = "";
+        // this.arrivalDateTime = "";
+        // this.travelTime = "";
+        // this.oldPosition = ["", ""];
     }
 
     // Getter
@@ -205,66 +240,56 @@ class Cykel {
         return distance;
     }
 
-    // returns a new position
-    incdec(position, currentposition, destination, traveltime) {
-        let x2 = destination[0];
-        let x1 = position[0];
-        let y2 = destination[1];
-        let y1 = position[1];
-        let ans = [];
 
-        // todo use real math instead
-        ans[0] = ((x2 > x1) ? currentposition[0] + ((x2 - x1) / traveltime) : currentposition[0] - ((x1 - x2) / traveltime));
-        ans[1] = ((y2 > y1) ? currentposition[1] + ((y2 - y1) / traveltime) : currentposition[1] - ((y1 - y2) / traveltime));
+    move(destination, ind) {
+        return new Promise((resolve, reject) => {
+            let position = this.position.split(" ").map(x => parseFloat(x));
+            let distance = - (position[ind] - destination[ind]);
+            let cos = ind === 1 ? Math.cos(position[0]) : 1;
+            let m = 111.111 * cos;
 
-        return ans;
-    }
+            m = m * 1000;
+            m = m / 0.55;
+            m = 1 / m;
+            m = distance/Math.abs(distance) * m;
+            m = m;
 
-    // steps through the journey from origin to destination, updating the object's position in 1s intervals
-    travel(position, destination, speed) {
-        var minThis = this;
-        let distance = minThis.distance(position, destination);
-        let travelTime = distance / speed;
+            console.log("INC " + ind + ": " + m)
+            
+            let count = Math.floor(Math.abs(distance / m));
+            let callCount = 0;
+            let bike = this;
 
-        minThis.travelTime = distance / speed;
-        minThis.currentDistance = minThis.originalDistance;
-        minThis.oldPosition = minThis.position;
-        minThis.currentPosition = position;
-        //minThis.position = position;
-        
-        // repeat every second until traveltime has ended
-        var callCount = 1;
-        var repeater = setInterval(function () {
-            if (callCount < travelTime) {
-                // eliminate last remaining current distance
-                // todo decrement time instead of distance
-                if (minThis.currentDistance > 5.55) {
-                    minThis.currentDistance -= 5.55;
-                } else {
-                    minThis.currentDistance = 0;
+            let intervalId = setInterval(() => {
+            
+                if (callCount > count) {
+                    clearInterval(intervalId)
+                    resolve()
+                    return;
                 }
 
-                // increment or decrement xy positions depending on travel direction
-                minThis.currentPosition = minThis.incdec(minThis.oldPosition, minThis.currentPosition, destination, travelTime);
-                minThis.position = minThis.currentPosition;
-                
+                position[ind] += m;
+                bike.position = position.join(" ");
+                io.emit("biketravel", JSON.stringify(bike));
                 callCount += 1;
-            } else {
-                // cleanup after loop has finished
-                // todo clean more, trigger log write
-                clearInterval(repeater);
-                minThis.moving = false;
-                minThis.speed = 0;
-                minThis.position = minThis.destination;
-                minThis.currentPosition = minThis.destination;
-            }
-        }, 1000);
 
-        return;
+            }, 100);
+        });
     }
 
+    moveRandom() {
+        let interval = setInterval(() => {
+            // position[0]
+        })
+    }
+
+    // emit() {
+    //     io.emit("biketravel", JSON.stingify(myMap));
+    // }
+
+
     // called by the rent route, provides input for the travel function
-    rent(data) {
+    async rent(data) {
         let position = this.position;
         let destination = data.destination;
         let userId = data.userId;
@@ -278,9 +303,14 @@ class Cykel {
         this.originalDistance = this.distance(position, destination);
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
-
-        this.travel(position, destination, this.speed);
+    
+        this.move(destination, 0).then(() => {
+            this.move(destination, 1);
+        })
 
         return data;
     }
 }
+
+
+

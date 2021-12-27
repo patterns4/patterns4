@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+USE App\Http\Controllers\{CitiesController, CustomersController, BikesController};
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+
+Route::get('/admin', function() {
+    return view('admin');
+});
+
+Route::get('/cities', [CitiesController::class, 'show']);
+Route::get('/cities/{id}', [CitiesController::class, 'citymap']);
+Route::get('/bikes', [BikesController::class, 'show']);
+Route::get('/customers', [CustomersController::class, 'show']);
+Route::get('/customers/{id}', [CustomersController::class, 'customerdetails']);
+Route::post('/customers/customer/save', [CustomersController::class, 'updatecustomer']);
+Route::post('/customers/customer/delete', [CustomersController::class, 'deletecustomer']);
