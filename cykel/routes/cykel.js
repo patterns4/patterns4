@@ -1,21 +1,23 @@
-var express = require('express');
-var router = express.Router();
-const mysql  = require("promise-mysql");
-const config = require("../db/bikes.json");
-const app = require("../app");
-const httpServer = require("http").createServer(app);
-const io = require("socket.io")(httpServer, {
+"use strict";
+
+import { Router } from 'express';
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { connect, getBikes } from "../src/bikes.js";
+
+const router = Router();
+const httpServer = createServer()
+
+const io = new Server(httpServer, {
     path: '/',
     cors: '*'
 });
-
-// routes and io on connection
 
 httpServer.listen(5000, () => {
    console.log("Websocket started at port ", 5000)
 });
 
-io.on('connection', (socket) => { 
+io.on('connection', () => { 
     console.log('a user connected');
     io.emit("message", "you're connected");
     io.emit("bikelocation", JSON.stringify(Object.fromEntries(myMap)));
@@ -24,31 +26,19 @@ io.on('connection', (socket) => {
 const myMap = new Map();
 let bikeIdCounter = 1;
 
-(async function() {
-    let db;
-    let bikes;
-    db = await mysql.createConnection(config);
-
-    process.on("exit", () => {
-        db.end();
-    });
-    let sql = `SELECT * FROM bike;`;
-    bikes = await db.query(sql);
+async function bikeInit() {
+    await connect();
+    let bikes = await getBikes();
 
     for (const row of bikes) {
         let bike = new Cykel(row);
         myMap.set(bike.bikeId, bike);
     }
-})();
+}
 
-// router.ws("/all", function(ws, req) {
-//     // console.log(myMap);
-//     ws.send(JSON.stringify(Object.fromEntries(myMap)));
-// });
+bikeInit();
 
-// returns size of bike collection
 router.get('/', function(req, res) {
-    io.emit("message", "till alla connected, från server")
     res.json(myMap.size);
 });
 
@@ -144,7 +134,7 @@ router.post('/create/', (req, res) => { //:msg
 router.post('/rent/', (req, res) => { //:msg
     let bikeId = parseInt(req.body.bikeId);
     let bike = myMap.get(bikeId);
-    let destination = JSON.parse(req.body.destination);
+    // let destination = JSON.parse(req.body.destination);
     let userId = parseInt(req.body.userId);
     let dt = new Date();
     let datac = {};
@@ -154,7 +144,7 @@ router.post('/rent/', (req, res) => { //:msg
             datetime: dt,
             bikeId: bike,
             userId: userId,
-            destination: destination
+            // destination: destination
         };
     } else {
         return "bike not found";
@@ -179,7 +169,7 @@ router.post('/rent/', (req, res) => { //:msg
 });
 
 
-module.exports = { router: router };
+export default router;
 
 
 
@@ -254,7 +244,7 @@ class Cykel {
             m = distance/Math.abs(distance) * m;
             m = m;
 
-            console.log("INC " + ind + ": " + m)
+            // console.log("INC " + ind + ": " + m)
             
             let count = Math.floor(Math.abs(distance / m));
             let callCount = 0;
@@ -277,21 +267,59 @@ class Cykel {
         });
     }
 
-    moveRandom() {
-        let interval = setInterval(() => {
-            // position[0]
-        })
+    moveRandom(ind) {
+        return new Promise((resolve, reject) => {
+            let position = this.position.split(" ").map(x => parseFloat(x));
+            
+            function operator(n, k) {
+                let rand = Math.ceil(Math.random() * 10);
+
+                if (rand % 2 === 0) {
+                    return n + k;
+                }
+                return n - k;
+            }
+            
+            let destination = [operator(position[0], Math.random() * 0.01),
+                                operator(position[1], Math.random() * 0.01)];
+
+            let distance = - (position[ind] - destination[ind]);
+            let cos = ind === 1 ? Math.cos(position[0]) : 1;
+            let m = 111.111 * cos;
+
+            m = m * 1000;
+            m = m / 0.55;
+            m = 1 / m;
+            m = distance/Math.abs(distance) * m;
+            m = m;
+
+            // console.log("INC " + ind + ": " + m)
+            
+            let count = Math.floor(Math.abs(distance / m));
+            let callCount = 0;
+            let bike = this;
+
+            let intervalId = setInterval(() => {
+            
+                if (callCount > count) {
+                    clearInterval(intervalId)
+                    resolve()
+                    return;
+                }
+
+                position[ind] += m;
+                bike.position = position.join(" ");
+                io.emit("biketravel", JSON.stringify(bike));
+                callCount += 1;
+
+            }, 100);
+        });
     }
-
-    // emit() {
-    //     io.emit("biketravel", JSON.stingify(myMap));
-    // }
-
 
     // called by the rent route, provides input for the travel function
     async rent(data) {
         let position = this.position;
-        let destination = data.destination;
+        // let destination = data.destination;
         let userId = data.userId;
         let datetime = data.datetime;
 
@@ -299,14 +327,20 @@ class Cykel {
         this.rentedBy = userId;
         this.moving = true;
         this.speed = 5.55; // 20 km/h
-        this.destination = destination;
-        this.originalDistance = this.distance(position, destination);
+        // this.destination = destination;
+        // this.originalDistance = this.distance(position, destination);
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
     
-        this.move(destination, 0).then(() => {
-            this.move(destination, 1);
-        })
+        // this.move(destination, 0).then(() => {
+        //     this.move(destination, 1);
+        // });
+        let first = Math.round(Math.random());
+        let second = first === 1 ? 0 : 1;
+        console.log(first, second)
+        this.moveRandom(first).then(() => {
+            this.moveRandom(second);
+        });
 
         return data;
     }

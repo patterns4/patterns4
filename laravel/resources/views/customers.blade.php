@@ -9,7 +9,7 @@
 </form>
 </div>
 
-@if (isset($customers))
+{{-- @if (isset($customers)) --}}
 
     <table class="table-auto">
         @foreach ($customers as $customer)
@@ -22,4 +22,4 @@
         </tr>
         @endforeach
     </table>
-@endif
+{{-- @endif --}}

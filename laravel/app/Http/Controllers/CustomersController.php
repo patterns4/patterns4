@@ -14,7 +14,9 @@ class CustomersController extends Controller
         if (request()->query("user_search")) {
             $search = request()->query("user_search");
             $data = ["customers" => $customers->search($search)];
+            return view('customers', $data);
         }
+        $data = ["customers" => $customers->all()];
         return view('customers', $data);
     }
 

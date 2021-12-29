@@ -43,8 +43,8 @@ socket.on('biketravel', data => {
 
 let city = <?= json_encode($city); ?>;
 let map = L.map('map', {
-    scrollWheelZoom: false,
-    dragging: false
+    // scrollWheelZoom: false,
+    // dragging: false
 }).setView(city.position.split(", "), 16);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',    {
@@ -52,6 +52,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',    {
         <a href="https://www.openstreetmap.org/copyright">
         OpenStreetMap</a> contributors`
     }).addTo(map);
+
+let bikes = {};
 
 // L.control.scale().addTo(map);
 
@@ -61,32 +63,17 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',    {
 // oms.addListener('click', function(marker) {
 //   popup.setContent(marker.desc);
 //   popup.setLatLng(marker.getLatLng());
-// //   map.openPopup(popup);
+//   map.openPopup(popup);
 // });
 
 // oms.addListener('spiderfy', function(markers) {
 //   map.closePopup();
 // });
 
-let bikes = {};
-
 // function drawBikes(all) {
 //     // map.clearLayers();
 //     for (const row of all) {
-//         //   var datum = window.mapData[i];
-//         let coord = row[1].position.split(" ");
-//         var loc = new L.LatLng(coord[0], coord[1]);
-//         var marker = new L.CircleMarker(loc, { radius: 6 }).bindPopup(`ID: ${row[1].bikeId}<br>Battery: ${row[1].battery}<br>Status: ${row[1].status}`);
-//         bikes[row[1].bikeId] = marker;
-//         map.addLayer(marker);
-//         oms.addMarker(marker);  // <-- here
-//     }
-// }
-
-// function drawBikes(all) {
-//     // map.clearLayers();
-//     for (const row of all) {
-//         //   var datum = window.mapData[i];
+//         // var datum = window.mapData[i];
 //         let coord = row[1].position.split(" ");
 //         var loc = new L.LatLng(coord[0], coord[1]);
 //         var marker = new L.CircleMarker(loc, { radius: 6 }).bindPopup(`ID: ${row[1].bikeId}<br>Battery: ${row[1].battery}<br>Status: ${row[1].status}`);
@@ -104,8 +91,10 @@ function moveBike(bike) {
     })
 }
 
-let bikemarkers = L.markerClusterGroup({ maxClusterRadius: 10 });
+// let bikemarkers = L.markerClusterGroup({ maxClusterRadius: 10 });
+let bikemarkers = L.layerGroup();
 function drawBikes(all) {
+    // map.clearLayers();
     bikemarkers.clearLayers();
     for (const row of all) {
         let latlong = row[1].position.split(" ");
@@ -115,9 +104,11 @@ function drawBikes(all) {
             radius: 6
         }).bindPopup(`ID: ${row[1].bikeId}<br>Battery: ${row[1].battery}<br>Status: ${row[1].status}`);
         bikes[row[1].bikeId] = marker;
-        map.addLayer(marker);
         bikemarkers.addLayer(marker);
+        // map.addLayer(marker);
+        // bikemarkers.addLayer(marker);
     }
+    map.addLayer(bikemarkers);
 }
 
 </script>

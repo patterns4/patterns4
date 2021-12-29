@@ -1,16 +1,18 @@
-// const mysql  = require("promise-mysql");
-// const config = require("../db/bikes.json");
-// let db;
-// let bikes;
+"use strict";
 
-// (async function() {
-//     db = await mysql.createConnection(config);
+import * as mysql from "promise-mysql";
+import { config } from "../db/bikes.js";
 
-//     process.on("exit", () => {
-//         db.end();
-//     });
-//     // console.log(db);
-// })();
+let db;
+let bikes;
+
+async function connect() {
+    db = await mysql.createConnection(config);
+
+    process.on("exit", () => {
+        db.end();
+    });
+};
 
 async function getBikes () {
     let sql = `SELECT * FROM bike;`;
@@ -19,6 +21,7 @@ async function getBikes () {
     return bikes;
 }
 
-module.exports = {
-    getBikes: getBikes
+export {
+    getBikes,
+    connect
 }

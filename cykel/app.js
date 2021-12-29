@@ -1,13 +1,16 @@
 // Express server
 const port = process.env.PORT || 1337;
-const express = require("express");
-const app = module.exports = express();
+import express from "express";
+// const express = require("express");
+const app = express();
 // const ws = require("ws");
-const cors = require('cors');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
+import cors from 'cors';
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
+// const bodyParser = import('body-parser');
 
-const cykel = require('./routes/cykel');
+// const cykel = import('./routes/cykel');
+import * as router from './routes/cykel.js';
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -25,7 +28,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/cykel', cykel.router); // /:msg
+app.use('/cykel', router.default); // /:msg
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
@@ -55,4 +58,6 @@ app.use((err, req, res, next) => {
 app.listen(port, async () => {
     console.log(`Example app listening on port ${port}!`);
 });
+
+export { app };
 
