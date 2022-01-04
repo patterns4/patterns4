@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes } from "../src/bikes.js";
+import { connect, getBikes, seedBikes } from "../src/bikes.js";
 
 const router = Router();
 const httpServer = createServer()
@@ -28,6 +28,7 @@ let bikeIdCounter = 1;
 
 async function bikeInit() {
     await connect();
+    await seedBikes();
     let bikes = await getBikes();
 
     for (const row of bikes) {
@@ -151,7 +152,7 @@ router.post('/rent/', (req, res) => { //:msg
     }
 
     try {
-        var result = bike.rent(datac);
+        let result = bike.rent(datac);
 
         if (result) {
             return res.json(datac);
@@ -233,6 +234,7 @@ class Cykel {
 
     move(destination, ind) {
         return new Promise((resolve, reject) => {
+
             let position = this.position.split(" ").map(x => parseFloat(x));
             let distance = - (position[ind] - destination[ind]);
             let cos = ind === 1 ? Math.cos(position[0]) : 1;
@@ -267,19 +269,15 @@ class Cykel {
         });
     }
 
+    //Skapar en egen slumpmässig destination, 0.01 latitud & longitud ifrån sin startposition
     moveRandom(ind) {
         return new Promise((resolve, reject) => {
             let position = this.position.split(" ").map(x => parseFloat(x));
             
             function operator(n, k) {
-                let rand = Math.ceil(Math.random() * 10);
-
-                if (rand % 2 === 0) {
-                    return n + k;
-                }
-                return n - k;
+                return [n - k, n + k][Math.round(Math.random() * 2)];
             }
-            
+
             let destination = [operator(position[0], Math.random() * 0.01),
                                 operator(position[1], Math.random() * 0.01)];
 
@@ -291,10 +289,8 @@ class Cykel {
             m = m / 0.55;
             m = 1 / m;
             m = distance/Math.abs(distance) * m;
-            m = m;
+            m = m * 10;
 
-            // console.log("INC " + ind + ": " + m)
-            
             let count = Math.floor(Math.abs(distance / m));
             let callCount = 0;
             let bike = this;
@@ -302,8 +298,8 @@ class Cykel {
             let intervalId = setInterval(() => {
             
                 if (callCount > count) {
-                    clearInterval(intervalId)
-                    resolve()
+                    clearInterval(intervalId);
+                    resolve();
                     return;
                 }
 
@@ -312,13 +308,13 @@ class Cykel {
                 io.emit("biketravel", JSON.stringify(bike));
                 callCount += 1;
 
-            }, 100);
+            }, 1000);
         });
     }
 
     // called by the rent route, provides input for the travel function
     async rent(data) {
-        let position = this.position;
+        // let position = this.position;
         // let destination = data.destination;
         let userId = data.userId;
         let datetime = data.datetime;
@@ -332,12 +328,12 @@ class Cykel {
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
     
-        // this.move(destination, 0).then(() => {
-        //     this.move(destination, 1);
-        // });
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
-        console.log(first, second)
+
+        console.log(`Bike nr ${this.bikeId} is running`);
+
+        //för simulationen körs cykelns moveRandom-funktion
         this.moveRandom(first).then(() => {
             this.moveRandom(second);
         });

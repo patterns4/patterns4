@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 let intcount = 0;
 let interval = setInterval(() => {
-    if (intcount >= 1000) {
+    if (intcount >= 5000) {
         clearInterval(interval);
         return;
     }

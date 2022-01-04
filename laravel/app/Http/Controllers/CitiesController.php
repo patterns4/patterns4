@@ -19,8 +19,7 @@ class CitiesController extends Controller
     public function citymap($id)
     {
         $city = new City();
-        // $bikes = Http::get('127.0.0.1:1337/cykel/all');
-        $data = ["city" => $city->where("city_id", $id)->first()];
+        $data = ["city" => json_encode($city->where("city_id", $id)->first())];
 
         return view('city', $data);
     }

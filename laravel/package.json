@@ -1,5 +1,6 @@
 {
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "npm run development",
         "development": "mix",
@@ -22,6 +23,8 @@
     },
     "dependencies": {
         "leaflet": "^1.7.1",
-        "leaflet.markercluster": "^1.5.3"
+        "leaflet.glify": "^3.2.0",
+        "leaflet.markercluster": "^1.5.3",
+        "node-fetch": "^3.1.0"
     }
 }

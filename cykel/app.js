@@ -1,16 +1,12 @@
 // Express server
 const port = process.env.PORT || 1337;
 import express from "express";
-// const express = require("express");
-const app = express();
-// const ws = require("ws");
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-// const bodyParser = import('body-parser');
-
-// const cykel = import('./routes/cykel');
 import * as router from './routes/cykel.js';
+
+const app = express();
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
