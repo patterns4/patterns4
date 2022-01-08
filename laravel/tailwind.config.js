@@ -11,7 +11,10 @@ module.exports = {
       gray: colors.gray,
       blue: colors.blue,
       teal: colors.teal,
-      white: colors.white
+      white: colors.white,
+    },
+    boxShadow: {
+      'default': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
     },
   },
   variants: {
