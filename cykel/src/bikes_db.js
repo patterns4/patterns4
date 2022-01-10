@@ -93,25 +93,16 @@ export {
     getParking
 }
 
-async function decideState(position, parking, city) {
-    // let sql = "SELECT * FROM parking";
-    // let parking = await db.query(sql);
-    let parked = false;
-
+async function decideState(position, parking) {
     for (const row of parking) {
         let latlong = row.position.split(" ").map(x => parseFloat(x));
         let spot = { lat: latlong[0], lng: latlong[1] };
-        // console.log(spot);
         let bikePosition = { lat: position[0], lng: position[1] };
-        // console.log(haversine(spot, bikePosition));
 
         if (haversine(spot, bikePosition) <= 50) {
-            console.log("PARK");
             return "parked";
-            // parked = true;
         }
     }
-    // console.log(parked);
     return "free";
 }
 

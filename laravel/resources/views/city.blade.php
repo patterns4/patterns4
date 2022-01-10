@@ -8,9 +8,9 @@
         <div class="w-full grid gap-y-6 justify-center grid-rows-8 h-3/6">
             <div class="cursor-pointer w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="lediga">Lediga</div>
             <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="hyrda">Hyrda</div>
-            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="parkerade">Parkerade</div>
-            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="laddas">På laddning</div>
-            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="parkering">Parkering</div>
+            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="parked">Parkerade</div>
+            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="depleted">Urladdade</div>
+            <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="parking">Parkering</div>
             <input id="bike_search" class="w-auto m-2 block box-border p-4 border-2 border-purple-300 rounded" type="number" placeholder="cykel ID">
             <div class="cursor-pointer shadow w-full h-12 bg-blue-500 text-white font-bold py-2 px-4 rounded justify-center flex items-center" id="search">Sök</div>
         </div>
@@ -24,44 +24,45 @@ const parking = JSON.parse('<?= $parking ?>');
 
 const freeBikesBtn = document.getElementById("lediga");
 const movingBtn = document.getElementById("hyrda");
-const parkingBtn = document.getElementById("parkering");
+const parkingBtn = document.getElementById("parking");
 const searchBtn = document.getElementById("search");
 const searchField = document.getElementById("bike_search");
-const parkedBikesBtn = document.getElementById("parkerade");
+const parkedBikesBtn = document.getElementById("parked");
+const depletedBikesBtn = document.getElementById("depleted");
+const classListActive = ["bg-blue-500", "bg-blue-700"];
+const classListHide = ["bg-blue-700", "bg-blue-500"];
 
-const bikes = {};
-// const socket = io("ws://127.0.0.1:5000");
-const bikemarkers = L.layerGroup();
+let bikeData;
+let trackMovingBikes = false;
+let trackFreeBikes = false;
+let trackDepletedBikes = false;
+let trackParkedBikes = false;
+
+const bikeMarkers = {};
+const bikeLayer = L.layerGroup();
 const parkingSpots = L.layerGroup();
 
 const map = L.map('map', {
         preferCanvas: true,
     }).setView(city.position.split(" "), 16);
 
-map.addLayer(bikemarkers);
-
-let bikeData;
-let trackMoving = false;
-let trackFree = false;
-let trackMalfuncBikes = false;
-let trackParkedBikes = false;
-let classListActive = ["bg-blue-500", "bg-blue-700"];
-let classListHide = ["bg-blue-700", "bg-blue-500"];
-
+    
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',    {
-        attribution: `&copy;
-        <a href="https://www.openstreetmap.org/copyright">
+    attribution: `&copy;
+    <a href="https://www.openstreetmap.org/copyright">
         OpenStreetMap</a> contributors`,
         keepBuffer: 20,
     }).addTo(map);
-
+        
+map.addLayer(bikeLayer);
 freeBikesBtn.addEventListener("click", plotFreeBikes);
 movingBtn.addEventListener("click", plotMoving);
 searchBtn.addEventListener("click", searchBike);
 parkingBtn.addEventListener("click", plotParking);
 parkedBikesBtn.addEventListener("click", plotParkedBikes);
+depleted.addEventListener("click", plotDepletedBikes);
 
-const socket = (function(){
+(function(){
     const socket = io("ws://127.0.0.1:5000");
     socket.on('message', text => {
         console.log("message from server");
@@ -74,21 +75,20 @@ const socket = (function(){
             Object.entries(bikeData).filter(x => x[1].cityName === city.city_name)
             );
         prepBikes();
-        // console.log(bikeData);
     });
 
     socket.on('bikestart', bike => {
         bikeData[bike.bikeId].state = "moving";
-        let marker = bikes[bike.bikeId];
+        let marker = bikeMarkers[bike.bikeId];
         marker.setStyle({ color: "#9B59B6" });
-            if (trackMoving && bikeData[bike.bikeId].removed) {
-                bikemarkers.addLayer(marker);
+            if (trackMovingBikes && bikeData[bike.bikeId].removed) {
+                bikeLayer.addLayer(marker);
                 bikeData[bike.bikeId].removed = false;
                 return;
             }
             
-            if (! trackMoving && ! bikeData[bike.bikeId].removed) {
-                bikemarkers.removeLayer(marker);
+            if (! trackMovingBikes && ! bikeData[bike.bikeId].removed) {
+                bikeLayer.removeLayer(marker);
                 bikeData[bike.bikeId].removed = true;
                 return;
             }
@@ -96,10 +96,22 @@ const socket = (function(){
 
     socket.on('bikestop', bike => {
         bikeData[bike.bikeId].state = bike.state;
-        let marker = bikes[bike.bikeId];
+        let marker = bikeMarkers[bike.bikeId];
         marker.setStyle({ color: "#3388ff" });
-        if (trackFree === false) {
-            bikemarkers.removeLayer(marker);
+        console.log(bike.battery);
+        marker.bindPopup(
+            `ID: ${bike.bikeId}<br>
+            Battery: ${bike.battery}<br>
+            Status: ${bike.status}<br>
+            Position: ${bike.position}<br>
+            State: ${bike.state}`
+            );
+        if (bike.state === "free" && trackFreeBikes === false) {
+            bikeLayer.removeLayer(marker);
+            bikeData[bike.bikeId].removed = true;
+        }
+        if (bike.state === "depleted" && trackDepletedBikes === false) {
+            bikeLayer.removeLayer(marker);
             bikeData[bike.bikeId].removed = true;
         }
     });
@@ -113,9 +125,9 @@ const socket = (function(){
         let bikeId = bike["bikeId"];
         let latlong = bike.position.split(" ");
         window.requestAnimationFrame(() => {
-            bikes[bikeId].setLatLng(latlong);
+            bikeMarkers[bikeId].setLatLng(latlong);
         });
-}
+    }
 
 }());
 
@@ -128,54 +140,72 @@ function toggleButton(button, callbacks, classlist) {
         button.classList.add(classlist[1]);
 }
 
-function plotParkedBikes() {
-    trackParked = true;
+function plotBikes(state) {
     for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "parked" && row[1].removed) {
-            let marker = bikes[row[1].bikeId];
-            // marker.setStyle({ color: "#9B59B6"});
-            bikemarkers.addLayer(marker);
+        if (row[1].state === state && row[1].removed) {
+            let marker = bikeMarkers[row[1].bikeId];
+            bikeLayer.addLayer(marker);
             row[1].removed = false;
         }
     }
+}
+
+function hideBikes(state)  {
+    for (const row of Object.entries(bikeData)) {
+        if (row[1].state === state && row[1].removed === false) {
+            let marker = bikeMarkers[row[1].bikeId];
+            bikeLayer.removeLayer(marker);
+            row[1].removed = true;
+        }
+    }
+}
+
+function plotFreeBikes() {
+    trackFreeBikes = true;
+    plotBikes("free");
+    toggleButton(freeBikesBtn, [ plotFreeBikes, hideFreeBikes ], classListActive);
+}
+
+function hideFreeBikes() {
+    trackFreeBikes = false;
+    hideBikes("free");
+    toggleButton(freeBikesBtn, [ hideFreeBikes, plotFreeBikes ], classListHide);
+}
+
+function plotMoving() {
+    trackMovingBikes = true;
+    plotBikes("moving");
+    toggleButton(movingBtn, [ plotMoving, hideMoving ], classListActive);
+}
+
+function hideMoving() {
+    trackMovingBikes = false;
+    hideBikes("moving");
+    toggleButton(movingBtn, [ hideMoving, plotMoving ], classListHide);
+}
+
+function plotDepletedBikes() {
+    trackDepletedBikes = true;
+    plotBikes("depleted");
+    toggleButton(depletedBikesBtn, [ plotDepletedBikes, hideDepletedBikes ], classListActive);
+}
+
+function hideDepletedBikes() {
+    trackDepletedBikes = false;
+    hideBikes("depleted");
+    toggleButton(depletedBikesBtn, [ hideDepletedBikes, plotDepletedBikes ], classListHide);
+}
+
+function plotParkedBikes() {
+    trackParked = true;
+    plotBikes("parked");
     toggleButton(parkedBikesBtn, [plotParkedBikes, hideParkedBikes], classListActive);
 }
 
 function hideParkedBikes() {
     trackParked = false;
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "parked" && row[1].removed === false) {
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.removeLayer(marker);
-            row[1].removed = true;
-        }
-    }
+    hideBikes("parked");
     toggleButton(parkedBikesBtn, [ hideParkedBikes, plotParkedBikes ], classListHide);
-}
-
-function plotBikesOnCharge() {
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "charging" && row[1].removed) {
-            let latlong = row.position.split(" ");
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.addLayer(marker);
-            row[1].removed = false;
-        }
-    }
-}
-
-function hideBikesOnCharge() {
-    plotParking= false;
-
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "charging") {
-            bikemarkers.removeLayer(bikes[row[1].bikeId]);
-        }
-    }
-}
-
-function hideBikesOnCharge() {
-
 }
 
 function prepParking() {
@@ -206,15 +236,15 @@ function prepBikes() {
             State: ${row[1].state}`
             );
 
-        bikes[row[1].bikeId] = marker;
+        bikeMarkers[row[1].bikeId] = marker;
         row[1].removed = true;
     }
 }
 
 function plotParking() {
-    map.removeLayer(bikemarkers);
+    map.removeLayer(bikeLayer);
     map.addLayer(parkingSpots);
-    map.addLayer(bikemarkers);
+    map.addLayer(bikeLayer);
 
     toggleButton(parkingBtn, [ plotParking, hideParking ], classListActive);
 }
@@ -224,55 +254,9 @@ function hideParking() {
     toggleButton(parkingBtn, [ hideParking, plotParking ], classListHide);
 }
 
-function plotFreeBikes() {
-    trackFree = true;
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].removed && row[1].state === "free") {
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.addLayer(marker);
-            row[1].removed = false;
-        }
-    }
-    toggleButton(freeBikesBtn, [ plotFreeBikes, hideFreeBikes ], classListActive);
-}
-
-function hideFreeBikes() {
-    trackFree = false;
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "free") {
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.removeLayer(marker);
-            row[1].removed = true;
-        }
-    }
-    toggleButton(freeBikesBtn, [ hideFreeBikes, plotFreeBikes ], classListHide);
-}
-
-function plotMoving() {
-    trackMoving = true;
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "moving" && row[1].removed) {
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.addLayer(marker);
-            row[1].removed = false;
-        }
-    }
-    toggleButton(movingBtn, [ plotMoving, hideMoving ], classListActive);
-}
-
-function hideMoving() {
-    trackMoving = false;
-    for (const row of Object.entries(bikeData)) {
-        if (row[1].state === "moving") {
-            let marker = bikes[row[1].bikeId];
-            bikemarkers.removeLayer(marker);
-            row[1].removed = true;
-        }
-    }
-    toggleButton(movingBtn, [ hideMoving, plotMoving ], classListHide);
-}
-
 function resetButtons() {
+    depletedBikesBtn.classList.add("bg-blue-500");
+    depletedBikesBtn.classList.remove("bg-blue-700");
     movingBtn.classList.add("bg-blue-500");
     movingBtn.classList.remove("bg-blue-700");
     freeBikesBtn.classList.add("bg-blue-500");
@@ -282,9 +266,11 @@ function resetButtons() {
     parkedBikesBtn.addEventListener("click", plotParkedBikes);
     freeBikesBtn.addEventListener("click", plotFreeBikes);
     movingBtn.addEventListener("click", plotMoving);
-    trackFree = false;
-    trackMoving = false;
-    trackParked = false;
+    depletedBikesBtn.addEventListener("click", plotDepletedBikes);
+    trackFreeBikesBikes = false;
+    trackMovingBikesBikes = false;
+    trackParkedBikes = false;
+    trackDepleted = false;
 }
 
 function searchBike() {
@@ -294,14 +280,14 @@ function searchBike() {
     for (const row of Object.entries(bikeData)) {
         if (row[1].bikeId === searchId) {
             if (row[1].removed === true) {
-                let marker = bikes[row[1].bikeId];
-                bikemarkers.addLayer(marker);
+                let marker = bikeMarkers[row[1].bikeId];
+                bikeLayer.addLayer(marker);
                 row[1].removed = false;
             }
             continue;
         }
-        let marker = bikes[row[1].bikeId];
-        bikemarkers.removeLayer(marker);
+        let marker = bikeMarkers[row[1].bikeId];
+        bikeLayer.removeLayer(marker);
         row[1].removed = true;
     }
 }
