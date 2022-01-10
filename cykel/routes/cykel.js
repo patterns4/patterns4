@@ -39,8 +39,6 @@ async function bikeInit() {
         let bike = new Cykel(row);
         myMap.set(bike.bikeId, bike);
     }
-    // console.log(myMap.get(1499))
-    // console.log(myMap["1"]);
 }
 
 bikeInit();
@@ -62,9 +60,6 @@ router.get('/:msg', function(req, res) {
     res.json(cykelinfo.info);
 });
 
-
-
-
 // creates a bike using this body -> x-www-form-urlencoded format:
 //
 // bikeId: 1
@@ -74,6 +69,7 @@ router.get('/:msg', function(req, res) {
 // battery: 50
 //
 // alternatively send no arguments at all, and they will be generated
+
 router.post('/create/', (req, res) => { //:msg
     // random variables to use if no data given when constructor called
     var randombat = Math.floor((Math.random() * 100) + 1); //random 1-100
@@ -285,14 +281,14 @@ class Cykel {
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
         .then(() => {
         this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
-            .then(() => { 
+            .then(() => {
                 console.log(`Bike nr ${this.bikeId} has stopped at position:`);
                 this.position = this.position.split(" ").map(x => Math.round(x * 100000) / 100000).join(" ");
                 console.log(this.position);
                 this.moving = false;
                 this.state = this.checkState();
                 console.log(this.battery);
-                io.emit("bikestop", this); 
+                io.emit("bikestop", this);
             });
         })
     }
@@ -314,7 +310,7 @@ class Cykel {
                 }
 
                 position[ind] += increment;
-                bike.battery -= 5;
+                bike.battery -= 0.1;
                 console.log(bike.battery);
                 bike.position = position.join(" ");
                 io.emit(cityName, JSON.stringify(bike));
