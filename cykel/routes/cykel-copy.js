@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes, getCities, bikesToCities, decideStatus, getParking } from "../src/bikes_db.js";
+import { connect, getBikes, getCities, bikesToCities, decideStatus } from "../src/bikes_db.js";
 import haversine from 'haversine-distance';
 
 const router = Router();
@@ -27,17 +27,15 @@ io.on('connection', () => {
 const myMap = new Map();
 let bikeIdCounter = 1;
 let cities;
-let parking;
 
 async function bikeInit() {
     await connect();
     let status = await decideStatus("Stockholm KTH");
     console.log(status)
     // await seedBikes();
-    // await bikesToCities();
+    await bikesToCities();
     let bikes = await getBikes();
-    // cities = await getCities();
-    parking = await getParking();
+    cities = await getCities();
     // console.log(cities)
 
     for (const row of bikes) {
@@ -282,71 +280,155 @@ class Cykel {
         });
     }
 
+    //Skapar en egen slumpmässig destination, 0.01 latitud & longitud ifrån sin startposition
+    // moveRandom(ind, cityName) {
+    //     return new Promise((resolve, reject) => {
+    //         let position = this.position.split(" ").map(x => parseFloat(x));
+    //         // console.log(position);
+            
+    //         function operator(n, k) {
+    //             return [n - k, n + k][Math.round(Math.random() * 1)];
+    //         }
+
+    //         let destination = [
+    //                             operator(position[0], Math.random() * 0.01),
+    //                             operator(position[1], Math.random() * 0.01)
+    //                         ];
+
+    //         // console.log(destination);
+                                
+    //         destination = destination.map(x => (x * 100000) / 100000);
+    //         // destination = destination.map(x => parseFloat(x));
+
+    //         // destination = destination.map(x => parseFloat(x).toFixed(4));
+    //         // destination = destination.map(x => parseFloat(x));
+
+    //         console.log(destination);
+                            
+    //         //jämför destination avstånd till laddplats, destination - laddplats < 0.0002;
+
+    //         let distance = - (position[ind] - destination[ind]);
+    //         let cos = ind === 1 ? Math.cos(position[0]) : 1;
+    //         let m = 111.111 * cos;
+
+    //         m = m * 1000;
+    //         m = m / 0.55;
+    //         m = 1 / m;
+    //         m = distance/Math.abs(distance) * m;
+    //         m = m * 10;
+
+    //         let count = Math.floor(Math.abs(distance / m));
+    //         let callCount = 0;
+    //         let bike = this;
+    //         // let cityName = this.bikeCity(bike.bikeId);
+    //         io.emit("bikestart", bike);
+    //         let intervalId = setInterval(() => {
+            
+    //             if (callCount > count) {
+    //                 clearInterval(intervalId);
+    //                 resolve();
+    //                 // io.emit("bikestop", bike);
+    //                 // todo: moving false
+    //                 return;
+    //             }
+
+    //             position[ind] += m;
+    //             bike.position = position.join(" ");
+    //             io.emit(cityName, JSON.stringify(bike));
+    //             // console.log(cityName);
+    //             callCount += 1;
+    //             //todo: battery decrement
+
+    //         }, 1000);
+    //     });
+    // }
+
     decideDestination(position) {
         function operator(n, k) {
             return [n - k, n + k][Math.round(Math.random() * 1)];
         }
+
+        // let position = this.position.split(" ").map(x => parseFloat(x));
         let destination = [ operator(position[0], Math.random() * 0.01),
                             operator(position[1], Math.random() * 0.01) ];
 
-        return destination.map(x => Math.round((x * 100000)) / 100000);
+        return destination.map(x => (x * 100000) / 100000);
     }
 
-    simulateTravel() {
-        console.log(`Bike nr ${this.bikeId} is running`);
+    moveBikeToDestination() {
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
-        let position = this.position.split(" ").map(x => parseFloat(x));
-        let destination = this.decideDestination(position);
-        // console.log("Bike start position: ");
-        // console.log(position);
-        // console.log("Bike destination: ");
-        // console.log(destination);
-        let diffLat = position[0] - destination[0];
-        let diffLong = position[1] - destination[1];
-        let diffArr = [ diffLat, diffLong ];
-
-        let increment = [
-                        diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
-                        diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
-                        ];
-
-        this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
+        let destination = decideDestination(this.position.split(" ").map(x => parseFloat(x)));
+    
+        this.travel(first, this.cityName)
         .then(() => {
-        this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
+        this.travel(second, this.cityName)
             .then(() => { 
-                console.log(`Bike nr ${this.bikeId} has stopped at position:`);
-                this.position = this.position.split(" ").map(x => Math.round(x * 100000) / 100000)
-                console.log(this.position);
+                console.log(`Bike nr ${this.bikeId} has stopped`);
                 this.moving = false;
                 io.emit("bikestop", this); 
             });
         })
     }
 
-    travel(ind, cityName, increment, diff) {
+    travel(ind, cityName, destination) {
         return new Promise((resolve, reject) => {
             let position = this.position.split(" ").map(x => parseFloat(x));
-            let count = Math.round(diff / Math.abs(increment));
+            // console.log(position);
+            
+
+            // let destination = [ operator(position[0], Math.random() * 0.01),
+            //                     operator(position[1], Math.random() * 0.01) ];
+                            
+            // let distance = - (position[ind] - destination[ind]);
+            let cos = ind === 1 ? Math.cos(position[0]) : 1;
+            let m = 111.111 * cos;
+
+            m = m * 1000;
+            m = m / 0.55;
+            m = 1 / m;
+            m = distance/Math.abs(distance) * m;
+            m = m * 10;
+
+            let count = Math.floor(Math.abs(distance / m));
             let callCount = 0;
             let bike = this;
-
+            // let cityName = this.bikeCity(bike.bikeId);
             io.emit("bikestart", bike);
             let intervalId = setInterval(() => {
             
                 if (callCount > count) {
                     clearInterval(intervalId);
                     resolve();
+                    // io.emit("bikestop", bike);
+                    // todo: moving false
                     return;
                 }
 
-                position[ind] += increment;
+                position[ind] += m;
                 bike.position = position.join(" ");
                 io.emit(cityName, JSON.stringify(bike));
+                // console.log(cityName);
                 callCount += 1;
+                //todo: battery decrement
 
             }, 1000);
         });
+    }
+
+    bikeCity() {
+        // let bikePosition = this.position.split(" ").map(x => parseFloat(parseFloat(x).toFixed(4)));
+        let bikePosition = this.position.split(" ").map(x => Math.round(x));
+        console.log(bikePosition);
+        for (const row of cities) {
+            // let cityPosition = row.position.split(" ").map(x => parseFloat(parseFloat(x).toFixed(4)));
+            let cityPosition = row.position.split(" ").map(x => Math.round(x));
+            console.log(cityPosition);
+
+            if (cityPosition[0] == bikePosition[0] && cityPosition[1] == bikePosition[1]) {
+                return row.city_name;
+            }
+        }
     }
 
     // called by the rent route, provides input for the travel function
@@ -359,15 +441,31 @@ class Cykel {
         // todo group these states
         this.rentedBy = userId;
         this.moving = true;
-        this.state = "moving";
         this.speed = 5.55; // 20 km/h
         // this.destination = destination;
         // this.originalDistance = this.distance(position, destination);
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
+    
+        // let first = Math.round(Math.random());
+        // let second = first === 1 ? 0 : 1;
 
-        this.simulateTravel();
+        console.log(`Bike nr ${this.bikeId} is running`);
+
+        //för simulationen körs cykelns moveRandom-funktion
+        // this.moveRandom(first, this.cityName)
+        //     .then(() => {
+        //     this.moveRandom(second, this.cityName)
+        //         .then(() => { 
+        //             console.log(`Bike nr ${this.bikeId} has stopped`);
+        //             this.moving = false;
+        //             io.emit("bikestop", this); 
+        //         });
+        //     })
 
         return data;
     }
 }
+
+
+
