@@ -107,7 +107,8 @@ export {
     bikesToCities,
     getCities,
     decideStatus,
-    getParking
+    getParking,
+    logTrip
 }
 
 async function decideState(position, parking) {
