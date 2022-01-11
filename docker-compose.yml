@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  db:
+  mysql:
     build: ./database
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -11,8 +11,6 @@ services:
       MYSQL_HOST: localhost
     ports:
       - "3307:3306"
-    expose:
-      - 3307
     restart: always
     healthcheck:
             test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
@@ -20,41 +18,26 @@ services:
             retries: 10
     networks:
       - app-network
-  web:
+  express:
     build: ./cykel
-    environment:
-      MYSQL_DATABASE: ebike
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_HOST: db
     ports:
       - "1337:1337"
       - "5000:5000"
-    links:
-      - db:db
     depends_on:
-      db: 
+      mysql: 
         condition: service_healthy
     restart: on-failure
     networks:
       - app-network
   laravel:
     build: ./laravel
-    environment:
-      MYSQL_DATABASE: ebike
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_HOST: db
     ports:
       - "8000:8000"
-      - "4000:5000"
-    links:
-      - db:db
-      - web:web
+      - "8001:5000"
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
-      web:
+      express:
         condition: service_started
     restart: on-failure
     networks:

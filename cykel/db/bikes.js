@@ -1,5 +1,5 @@
 let config = {
-    "host":     "db",
+    "host":     "mysql",
     "user":     "user",
     "password": "password",
     "database": "ebike",
