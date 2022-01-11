@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema ebike
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `ebike` DEFAULT CHARACTER SET latin1 ;
+-- CREATE SCHEMA IF NOT EXISTS `ebike` DEFAULT CHARACTER SET latin1 ;
 USE `ebike` ;
 
 -- -----------------------------------------------------
@@ -113,6 +113,8 @@ CREATE TABLE IF NOT EXISTS `ebike`.`station` (
   PRIMARY KEY (`station_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

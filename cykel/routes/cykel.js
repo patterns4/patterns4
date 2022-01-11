@@ -264,6 +264,7 @@ class Cykel {
     }
 
     simulateTravel() {
+
         console.log(`Bike nr ${this.bikeId} is running`);
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
@@ -277,7 +278,8 @@ class Cykel {
                         diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
                         diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
                         ];
-
+        io.emit("bikestart", bike);
+       
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
         .then(() => {
         this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
@@ -300,7 +302,7 @@ class Cykel {
             let callCount = 0;
             let bike = this;
 
-            io.emit("bikestart", bike);
+            // io.emit("bikestart", bike);
             let intervalId = setInterval(() => {
             
                 if (callCount > count || bike.battery <= 5) {
