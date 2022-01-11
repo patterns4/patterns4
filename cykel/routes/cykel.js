@@ -304,17 +304,9 @@ class Cykel {
                 this.moving = false;
                 this.state = this.checkState();
                 console.log(this.battery);
-<<<<<<< HEAD
                 io.emit(`bikestop ${this.cityName}`, this);
                 let end_time = new Date();
                 toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
-=======
-                io.emit("bikestop", this);
-                //log
-                // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
-                let end_time = new Date();
-                toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
->>>>>>> 58853d5e7442726c9607c9a71ecb98dbaca90473
             });
         })
     }
