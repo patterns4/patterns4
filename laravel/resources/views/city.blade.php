@@ -60,7 +60,7 @@ movingBtn.addEventListener("click", plotMoving);
 searchBtn.addEventListener("click", searchBike);
 parkingBtn.addEventListener("click", plotParking);
 parkedBikesBtn.addEventListener("click", plotParkedBikes);
-depleted.addEventListener("click", plotDepletedBikes);
+depletedBikesBtn.addEventListener("click", plotDepletedBikes);
 
 (function(){
     const socket = io("ws://localhost:5000");
@@ -77,7 +77,7 @@ depleted.addEventListener("click", plotDepletedBikes);
         prepBikes();
     });
 
-    socket.on('bikestart', bike => {
+    socket.on(`bikestart ${city.city_name}`, bike => {
         bikeData[bike.bikeId].state = "moving";
         let marker = bikeMarkers[bike.bikeId];
         marker.setStyle({ color: "#9B59B6" });
@@ -94,11 +94,11 @@ depleted.addEventListener("click", plotDepletedBikes);
             }
     });
 
-    socket.on('bikestop', bike => {
-        bikeData[bike.bikeId].state = bike.state;
+    socket.on(`bikestop ${city.city_name}`, bike => {
         let marker = bikeMarkers[bike.bikeId];
+    
+        bikeData[bike.bikeId].state = bike.state;
         marker.setStyle({ color: "#3388ff" });
-        console.log(bike.battery);
         marker.bindPopup(
             `ID: ${bike.bikeId}<br>
             Battery: ${bike.battery}<br>
@@ -225,9 +225,11 @@ function prepParking() {
 function prepBikes() {
     for (const row of Object.entries(bikeData)) {
         let latlong = row[1].position.split(" ");
+        let circleColor = row[1].state === "moving" ? "#9B59B6" : "#3388ff";
         let marker = new L.circle(latlong, {
             radius: 6,
             zIndexOffset: 1,
+            color: circleColor
         }).bindPopup(
             `ID: ${row[1].bikeId}<br>
             Battery: ${row[1].battery}<br>
