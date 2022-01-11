@@ -77,7 +77,7 @@ depleted.addEventListener("click", plotDepletedBikes);
         prepBikes();
     });
 
-    socket.on('bikestart', bike => {
+    socket.on(`bikestart ${city.city_name}`, bike => {
         bikeData[bike.bikeId].state = "moving";
         let marker = bikeMarkers[bike.bikeId];
         marker.setStyle({ color: "#9B59B6" });
@@ -94,7 +94,7 @@ depleted.addEventListener("click", plotDepletedBikes);
             }
     });
 
-    socket.on('bikestop', bike => {
+    socket.on(`bikestop ${city.city_name}`, bike => {
         bikeData[bike.bikeId].state = bike.state;
         let marker = bikeMarkers[bike.bikeId];
         marker.setStyle({ color: "#3388ff" });
@@ -225,9 +225,11 @@ function prepParking() {
 function prepBikes() {
     for (const row of Object.entries(bikeData)) {
         let latlong = row[1].position.split(" ");
+        let circleColor = row[1].state === "moving" ? "#9B59B6" : "#3388ff";
         let marker = new L.circle(latlong, {
             radius: 6,
             zIndexOffset: 1,
+            color: circleColor
         }).bindPopup(
             `ID: ${row[1].bikeId}<br>
             Battery: ${row[1].battery}<br>

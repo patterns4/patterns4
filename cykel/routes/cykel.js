@@ -292,7 +292,7 @@ class Cykel {
                 this.moving = false;
                 this.state = this.checkState();
                 console.log(this.battery);
-                io.emit("bikestop", this);
+                io.emit(`bikestop ${this.cityName}`, this);
             });
         })
     }
@@ -304,7 +304,7 @@ class Cykel {
             let callCount = 0;
             let bike = this;
 
-            io.emit("bikestart", bike);
+            io.emit(`bikestart ${cityName}`, bike);
             let intervalId = setInterval(() => {
             
                 if (callCount > count || bike.battery <= 5) {
@@ -315,7 +315,6 @@ class Cykel {
 
                 position[ind] += increment;
                 bike.battery -= 0.1;
-                console.log(bike.battery);
                 bike.position = position.join(" ");
                 io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
