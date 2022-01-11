@@ -273,12 +273,12 @@ class Cykel {
         let diffLat = position[0] - destination[0];
         let diffLong = position[1] - destination[1];
         let diffArr = [ diffLat, diffLong ];
-
+        // let bike = this;
         let increment = [
                         diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
                         diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
                         ];
-        io.emit("bikestart", bike);
+        io.emit("bikestart", this);
        
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
         .then(() => {
@@ -312,9 +312,11 @@ class Cykel {
                 }
 
                 position[ind] += increment;
+                // this.position = position.join(" ");
                 bike.battery -= 0.1;
                 console.log(bike.battery);
                 bike.position = position.join(" ");
+                io.emit("message", bike.position);
                 io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
 

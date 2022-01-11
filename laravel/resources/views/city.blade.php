@@ -39,6 +39,7 @@ let trackDepletedBikes = false;
 let trackParkedBikes = false;
 
 const bikeMarkers = {};
+const bikePopups = {};
 const bikeLayer = L.layerGroup();
 const parkingSpots = L.layerGroup();
 
@@ -95,17 +96,16 @@ depleted.addEventListener("click", plotDepletedBikes);
     });
 
     socket.on('bikestop', bike => {
+        let latlong = bike.position.split(" ");
+
         bikeData[bike.bikeId].state = bike.state;
-        let marker = bikeMarkers[bike.bikeId];
-        marker.setStyle({ color: "#3388ff" });
-        console.log(bike.battery);
-        marker.bindPopup(
-            `ID: ${bike.bikeId}<br>
-            Battery: ${bike.battery}<br>
-            Status: ${bike.status}<br>
-            Position: ${bike.position}<br>
-            State: ${bike.state}`
-            );
+        bikeMarkers[bike.bikeId].setStyle({ color: "#3388ff" });
+        bikePopups[bikeId].setContent(`ID: ${bike.bikeId}<br>
+               Battery: ${parseFloat(bike.battery.toFixed(5))}<br>
+               Status: ${bike.status}<br>
+               Position: ${parseFloat(latlong[0]).toFixed(5)} ${parseFloat(latlong[1]).toFixed(5)}<br>
+               State: ${bike.state}`);
+        
         if (bike.state === "free" && trackFreeBikes === false) {
             bikeLayer.removeLayer(marker);
             bikeData[bike.bikeId].removed = true;
@@ -124,8 +124,14 @@ depleted.addEventListener("click", plotDepletedBikes);
     function moveBike(bike) {
         let bikeId = bike["bikeId"];
         let latlong = bike.position.split(" ");
+
         window.requestAnimationFrame(() => {
             bikeMarkers[bikeId].setLatLng(latlong);
+            bikePopups[bikeId].setContent(`ID: ${bike.bikeId}<br>
+               Battery: ${parseFloat(bike.battery.toFixed(5))}<br>
+               Status: ${bike.status}<br>
+               Position: ${parseFloat(latlong[0]).toFixed(5)} ${parseFloat(latlong[1]).toFixed(5)}<br>
+               State: ${bike.state}`);
         });
     }
 
@@ -228,14 +234,21 @@ function prepBikes() {
         let marker = new L.circle(latlong, {
             radius: 6,
             zIndexOffset: 1,
-        }).bindPopup(
-            `ID: ${row[1].bikeId}<br>
-            Battery: ${row[1].battery}<br>
-            Status: ${row[1].status}<br>
-            Position: ${row[1].position}<br>
-            State: ${row[1].state}`
-            );
-
+        })
+        // .bindPopup(
+        //     `ID: ${row[1].bikeId}<br>
+        //     Battery: ${row[1].battery}<br>
+        //     Status: ${row[1].status}<br>
+        //     Position: ${row[1].position}<br>
+        //     State: ${row[1].state}`
+        //     );
+        let popup = L.popup().setContent(`ID: ${row[1].bikeId}<br>
+               Battery: ${row[1].battery}<br>
+               Status: ${row[1].status}<br>
+               Position: ${row[1].position}<br>
+               State: ${row[1].state}`);
+        bikePopups[row[1].bikeId] = popup;
+        marker.bindPopup(popup);
         bikeMarkers[row[1].bikeId] = marker;
         row[1].removed = true;
     }
