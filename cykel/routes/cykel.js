@@ -26,6 +26,7 @@ io.on('connection', () => {
 
 const myMap = new Map();
 let bikeIdCounter = 1;
+let logIdCounter = 1;
 let parking;
 
 async function bikeInit() {
@@ -45,10 +46,10 @@ async function bikeInit() {
     }
 }
 
-async function toLog(data) {
+async function toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id) {
     try {
         await connect();
-        await logTrip(data);
+        await logTrip(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
     } catch (e) {
         console.log(e);
     }
@@ -170,6 +171,7 @@ router.post('/rent/', (req, res) => { //:msg
         let result = bike.rent(datac);
 
         if (result) {
+            logIdCounter++;
             return res.json(datac);
         }
     } catch (e) {
@@ -281,6 +283,7 @@ class Cykel {
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
         let position = this.position.split(" ").map(x => parseFloat(x));
+        let orgPos = position;
         let destination = this.decideDestination(position);
         let diffLat = position[0] - destination[0];
         let diffLong = position[1] - destination[1];
@@ -303,7 +306,9 @@ class Cykel {
                 console.log(this.battery);
                 io.emit("bikestop", this);
                 //log
-                toLog("mjau");
+                // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
+                let end_time = datetime;
+                toLog(logIdCounter, this.rentDateTime, this.orgPos, end_time, this.position, this.rentedBy, this.bikeId);
             });
         })
     }
