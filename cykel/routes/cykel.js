@@ -30,7 +30,6 @@ let parking;
 
 async function bikeInit() {
     try {
-
         await connect();
         // await bikesToCities();
         let bikes = await getBikes();

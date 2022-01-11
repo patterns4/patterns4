@@ -14,6 +14,7 @@
     <table class="table-auto">
         @foreach ($customers as $customer)
         <tr class="bg-emerald-200">
+            <td> {{ $customer->user_id }}</td>
             <td class="p-8">{{ $customer->first_name }} {{ $customer->last_name }}</td>
             <td> {{ $customer->phone }}</td>
             <td> {{ $customer->email }}</td>
