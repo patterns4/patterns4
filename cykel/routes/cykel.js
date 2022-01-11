@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes, bikesToCities, getParking } from "../src/bikes_db.js";
+import { connect, getBikes, bikesToCities, getParking, logTrip } from "../src/bikes_db.js";
 import haversine from 'haversine-distance';
 
 const router = Router();
