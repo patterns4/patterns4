@@ -26,7 +26,7 @@ io.on('connection', () => {
 
 const myMap = new Map();
 let bikeIdCounter = 1;
-let logIdCounter = 1;
+let logIdCounter = 0;
 let parking;
 
 async function bikeInit() {
@@ -308,7 +308,7 @@ class Cykel {
                 //log
                 // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
                 let end_time = new Date();
-                toLog(logIdCounter, this.rentDateTime, this.orgPos, end_time, this.position, this.rentedBy, this.bikeId);
+                toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
             });
         })
     }
