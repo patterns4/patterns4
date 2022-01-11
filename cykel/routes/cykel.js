@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes, bikesToCities, getParking } from "../src/bikes_db.js";
+import { connect, getBikes, bikesToCities, getParking, logTrip } from "../src/bikes_db.js";
 import haversine from 'haversine-distance';
 
 const router = Router();
@@ -26,6 +26,7 @@ io.on('connection', () => {
 
 const myMap = new Map();
 let bikeIdCounter = 1;
+let logIdCounter = 0;
 let parking;
 
 async function bikeInit() {
@@ -40,6 +41,15 @@ async function bikeInit() {
             let bike = new Cykel(row);
             myMap.set(bike.bikeId, bike);
         }
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id) {
+    try {
+        await connect();
+        await logTrip(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
     } catch (e) {
         console.log(e);
     }
@@ -161,6 +171,7 @@ router.post('/rent/', (req, res) => { //:msg
         let result = bike.rent(datac);
 
         if (result) {
+            logIdCounter++;
             return res.json(datac);
         }
     } catch (e) {
@@ -272,6 +283,7 @@ class Cykel {
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
         let position = this.position.split(" ").map(x => parseFloat(x));
+        let orgPos = position;
         let destination = this.decideDestination(position);
         let diffLat = position[0] - destination[0];
         let diffLong = position[1] - destination[1];
@@ -292,7 +304,17 @@ class Cykel {
                 this.moving = false;
                 this.state = this.checkState();
                 console.log(this.battery);
+<<<<<<< HEAD
                 io.emit(`bikestop ${this.cityName}`, this);
+                let end_time = new Date();
+                toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
+=======
+                io.emit("bikestop", this);
+                //log
+                // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
+                let end_time = new Date();
+                toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
+>>>>>>> 58853d5e7442726c9607c9a71ecb98dbaca90473
             });
         })
     }

@@ -60,7 +60,7 @@ movingBtn.addEventListener("click", plotMoving);
 searchBtn.addEventListener("click", searchBike);
 parkingBtn.addEventListener("click", plotParking);
 parkedBikesBtn.addEventListener("click", plotParkedBikes);
-depleted.addEventListener("click", plotDepletedBikes);
+depletedBikesBtn.addEventListener("click", plotDepletedBikes);
 
 (function(){
     const socket = io("ws://localhost:5000");
@@ -95,10 +95,10 @@ depleted.addEventListener("click", plotDepletedBikes);
     });
 
     socket.on(`bikestop ${city.city_name}`, bike => {
-        bikeData[bike.bikeId].state = bike.state;
         let marker = bikeMarkers[bike.bikeId];
+    
+        bikeData[bike.bikeId].state = bike.state;
         marker.setStyle({ color: "#3388ff" });
-        console.log(bike.battery);
         marker.bindPopup(
             `ID: ${bike.bikeId}<br>
             Battery: ${bike.battery}<br>
