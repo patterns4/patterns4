@@ -39,6 +39,7 @@ let trackDepletedBikes = false;
 let trackParkedBikes = false;
 
 const bikeMarkers = {};
+const bikePopups = {};
 const bikeLayer = L.layerGroup();
 const parkingSpots = L.layerGroup();
 
@@ -237,7 +238,7 @@ function prepBikes() {
             Position: ${row[1].position}<br>
             State: ${row[1].state}`
             );
-
+        bikePopups[row[1].bikeId] = L.popup();
         bikeMarkers[row[1].bikeId] = marker;
         row[1].removed = true;
     }
