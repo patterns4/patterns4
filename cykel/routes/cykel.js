@@ -307,7 +307,7 @@ class Cykel {
                 io.emit("bikestop", this);
                 //log
                 // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
-                let end_time = datetime;
+                let end_time = new Date();
                 toLog(logIdCounter, this.rentDateTime, this.orgPos, end_time, this.position, this.rentedBy, this.bikeId);
             });
         })
