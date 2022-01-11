@@ -1,8 +1,9 @@
 let config = {
-    "host":     "127.0.0.1",
+    "host":     "db",
     "user":     "user",
-    "password": "pass",
-    "database": "ebike"
+    "password": "password",
+    "database": "ebike",
+    "port": "3306"
 }
 
 export { config };

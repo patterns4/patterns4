@@ -29,15 +29,20 @@ let bikeIdCounter = 1;
 let parking;
 
 async function bikeInit() {
-    await connect();
-    // await bikesToCities();
-    let bikes = await getBikes();
-    parking = await getParking();
-    // console.log(cities)
+    try {
 
-    for (const row of bikes) {
-        let bike = new Cykel(row);
-        myMap.set(bike.bikeId, bike);
+        await connect();
+        await bikesToCities();
+        let bikes = await getBikes();
+        parking = await getParking();
+        // console.log(cities)
+    
+        for (const row of bikes) {
+            let bike = new Cykel(row);
+            myMap.set(bike.bikeId, bike);
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 

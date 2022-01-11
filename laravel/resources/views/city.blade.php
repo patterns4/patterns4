@@ -63,7 +63,7 @@ parkedBikesBtn.addEventListener("click", plotParkedBikes);
 depleted.addEventListener("click", plotDepletedBikes);
 
 (function(){
-    const socket = io("ws://127.0.0.1:5000");
+    const socket = io("ws://localhost:5000");
     socket.on('message', text => {
         console.log("message from server");
         console.log(text);
