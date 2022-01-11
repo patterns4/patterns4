@@ -282,8 +282,8 @@ class Cykel {
         console.log(`Bike nr ${this.bikeId} is running`);
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
+        let orgPos = this.position;
         let position = this.position.split(" ").map(x => parseFloat(x));
-        let orgPos = position;
         let destination = this.decideDestination(position);
         let diffLat = position[0] - destination[0];
         let diffLong = position[1] - destination[1];
@@ -309,7 +309,16 @@ class Cykel {
                 // toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
                 let end_time = new Date();
                 toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
-            });
+            })
+                .then(() => {
+                    //cleanup when arrived
+                    this.rentedBy = "";
+                    this.moving = false;
+                    this.state = this.checkState();
+                    this.rentDateTime = "";
+                    this.rentDTString = "";
+                    this.speed = 0;
+                });
         })
     }
 
