@@ -32,7 +32,7 @@ async function bikeInit() {
     try {
 
         await connect();
-        await bikesToCities();
+        // await bikesToCities();
         let bikes = await getBikes();
         parking = await getParking();
         // console.log(cities)
