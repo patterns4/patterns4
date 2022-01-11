@@ -45,6 +45,15 @@ async function bikeInit() {
     }
 }
 
+async function toLog(data) {
+    try {
+        await connect();
+        await logTrip(data);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 bikeInit();
 
 router.get('/', function(req, res) {
@@ -293,6 +302,8 @@ class Cykel {
                 this.state = this.checkState();
                 console.log(this.battery);
                 io.emit("bikestop", this);
+                //log
+                toLog("mjau");
             });
         })
     }
