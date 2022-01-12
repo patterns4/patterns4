@@ -7,7 +7,9 @@ import { connect, getBikes, getParking, logTrip, updateBike } from "../src/bikes
 import haversine from 'haversine';
 
 const router = Router();
-const httpServer = createServer()
+const httpServer = createServer();
+const travelMultiplier = 0.01;
+const batteryDepletion = 0.1;
 
 const io = new Server(httpServer, {
     path: '/',
@@ -249,8 +251,8 @@ class Cykel {
         function operator(n, k) {
             return [n - k, n + k][Math.round(Math.random() * 1)];
         }
-        let destination = [ operator(position[0], Math.random() * 0.01),
-                            operator(position[1], Math.random() * 0.01) ];
+        let destination = [ operator(position[0], Math.random() * travelMultiplier),
+                            operator(position[1], Math.random() * travelMultiplier) ];
 
         return destination.map(x => Math.round((x * 100000)) / 100000);
     }
@@ -320,7 +322,7 @@ class Cykel {
                     return;
                 }
                 this.position[ind] += increment;
-                bike.battery -= 0.1;
+                bike.battery -= batteryDepletion;
                 io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
 
