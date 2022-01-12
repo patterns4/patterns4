@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes, bikesToCities, getParking, logTrip } from "../src/bikes_db.js";
+import { connect, getBikes, bikesToCities, getParking, logTrip, updateBike } from "../src/bikes_db.js";
 import haversine from 'haversine-distance';
 
 const router = Router();
@@ -32,10 +32,8 @@ let parking;
 async function bikeInit() {
     try {
         await connect();
-        // await bikesToCities();
         let bikes = await getBikes();
         parking = await getParking();
-        // console.log(cities)
     
         for (const row of bikes) {
             let bike = new Cykel(row);
@@ -46,10 +44,10 @@ async function bikeInit() {
     }
 }
 
-async function toLog(log_id, start_time, start_point, end_time, end_point, user_id, bike_id) {
+async function toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) {
     try {
-        await connect();
-        await logTrip(log_id, start_time, start_point, end_time, end_point, user_id, bike_id);
+        // await connect();
+        await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost);
     } catch (e) {
         console.log(e);
     }
@@ -196,27 +194,13 @@ class Cykel {
     constructor(data) {
         // supplied on creation
         this.bikeId = data.bike_id;
-        this.position = data.position;
+        this.position = data.position.split(" ").map(x => parseFloat(x));
         this.speed = data.speed;
         this.status = data.status;
         this.state = data.state;
         this.battery = data.battery;
         this.moving = false;
         this.cityName = data.city_name;
-
-        // used and filled by functions
-        // todo: group these for easy clearing and logging
-    
-        // this.rentedBy = "";
-        // this.destination = ["", ""];
-        // this.currentPosition = ["", ""];
-        // this.currentDistance = "";
-        // this.originalDistance = "";
-        // this.rentDateTime = "";
-        // this.rentDTString = "";
-        // this.arrivalDateTime = "";
-        // this.travelTime = "";
-        // this.oldPosition = ["", ""];
     }
 
     // Getter
@@ -231,37 +215,18 @@ class Cykel {
         return datetime;
     }
 
-    // returns distance between x1y1 and x2y2
-    distance(position, destination) {
-        let p = position;
-        let d = destination;
-        let x2 = d[0];
-        let x1 = p[0];
-        let y2 = d[1];
-        let y1 = p[1];
-
-        // sqrt dx^2 + dy^2
-        let distance = Math.sqrt(
-            Math.abs(((x2-x1)**2)) // converts to positive number
-            + 
-            Math.abs(((y2-y1)**2)) // converts to positive number
-        );
-
-        return distance;
-    }
-
     checkState() {
         if (this.battery < 10) {
             return "depleted";
         }
         for (const row of parking) {
-            let bikePosition = this.position.split(" ");
+            let position = this.position;
             let spot = row.position.split(" ");
             
-            bikePosition = { lat: bikePosition[0], lng: bikePosition[0] };
+            position = { lat: position[0], lng: position[0] };
             spot = { lat: spot[0], lng: spot[1] };
 
-            if (haversine(spot, bikePosition) <= 50) {
+            if (haversine(spot, position) <= 50) {
                 return "parked";
             }
         }
@@ -272,53 +237,73 @@ class Cykel {
         function operator(n, k) {
             return [n - k, n + k][Math.round(Math.random() * 1)];
         }
-        let destination = [ operator(position[0], Math.random() * 0.01),
-                            operator(position[1], Math.random() * 0.01) ];
+        let destination = [ operator(position[0], Math.random() * 0.001),
+                            operator(position[1], Math.random() * 0.001) ];
 
         return destination.map(x => Math.round((x * 100000)) / 100000);
+    }
+
+    calcCostAndLog() {
+        let start_time = this.rentDateTime;
+        let end_time = new Date();
+        let delta_time = parseInt(Math.abs(end_time.getTime() - start_time.getTime()) / (1000));
+        let per_sec = 0.08333;
+        let start_fee;
+                
+        if (this.state == "parked") {
+            start_fee = 5;
+        } else if (this.state == "free") {
+            start_fee = 10;
+        }
+
+        let cost = start_fee + (delta_time * per_sec);
+        toLog(this.rentDateTime, this.orgPos, end_time, delta_time, this.position, this.rentedBy, this.bikeId, cost);
+        // return [cost, delta_time];
     }
 
     simulateTravel() {
         console.log(`Bike nr ${this.bikeId} is running`);
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
-        let position = this.position.split(" ").map(x => parseFloat(x));
-        let orgPos = position;
-        let destination = this.decideDestination(position);
-        let diffLat = position[0] - destination[0];
-        let diffLong = position[1] - destination[1];
+        // let position = this.position.map(x => parseFloat(x));
+        let destination = this.decideDestination(this.position);
+        let diffLat = this.position[0] - destination[0];
+        let diffLong = this.position[1] - destination[1];
         let diffArr = [ diffLat, diffLong ];
-
+        
         let increment = [
-                        diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
-                        diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
-                        ];
-
+            diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
+            diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
+        ];
+        
+        this.orgPos = this.position.map(x => Math.round(x * 100000) / 100000);
+        io.emit(`bikestart ${this.cityName}`, this);
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
         .then(() => {
         this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
             .then(() => {
-                console.log(`Bike nr ${this.bikeId} has stopped at position:`);
-                this.position = this.position.split(" ").map(x => Math.round(x * 100000) / 100000).join(" ");
-                console.log(this.position);
                 this.moving = false;
                 this.state = this.checkState();
-                console.log(this.battery);
+                this.position = this.position.map(x => Math.round(x * 100000) / 100000);
+                this.calcCostAndLog();
+                updateBike(this.position, this.battery, this.state, this.bikeId);
+
+                console.log(`Bike nr ${this.bikeId} has stopped at position:`);
+                console.log(this.position);
                 io.emit(`bikestop ${this.cityName}`, this);
-                let end_time = new Date();
-                toLog(logIdCounter, this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId);
+                // let end_time = new Date();
+                // toLog(this.rentDateTime, orgPos, end_time, costTime[1], this.position, this.rentedBy, this.bikeId, cost[0]);
             });
         })
     }
 
     travel(ind, cityName, increment, diff) {
         return new Promise((resolve, reject) => {
-            let position = this.position.split(" ").map(x => parseFloat(x));
+            let position = this.position;
             let count = Math.round(diff / Math.abs(increment));
             let callCount = 0;
             let bike = this;
 
-            io.emit(`bikestart ${cityName}`, bike);
             let intervalId = setInterval(() => {
             
                 if (callCount > count || bike.battery <= 5) {
@@ -327,9 +312,10 @@ class Cykel {
                     return;
                 }
 
-                position[ind] += increment;
+                // position[ind] += increment;
+                this.position[ind] += increment;
                 bike.battery -= 0.1;
-                bike.position = position.join(" ");
+                // bike.position = position.join(" ");
                 io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
 

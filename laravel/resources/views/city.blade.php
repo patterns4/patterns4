@@ -70,7 +70,7 @@ depletedBikesBtn.addEventListener("click", plotDepletedBikes);
         console.log(text);
     });
 
-    socket.on('bikelocation', data => {
+    socket.once('bikelocation', data => {
         bikeData = JSON.parse(data);
         bikeData = Object.fromEntries(
             Object.entries(bikeData).filter(x => x[1].cityName === city.city_name)
@@ -79,8 +79,9 @@ depletedBikesBtn.addEventListener("click", plotDepletedBikes);
     });
 
     socket.on(`bikestart ${city.city_name}`, bike => {
-        bikeData[bike.bikeId].state = "moving";
         let marker = bikeMarkers[bike.bikeId];
+
+        bikeData[bike.bikeId].state = "moving";
         marker.setStyle({ color: "#9B59B6" });
             if (trackMovingBikes && bikeData[bike.bikeId].removed) {
                 bikeLayer.addLayer(marker);
@@ -97,16 +98,14 @@ depletedBikesBtn.addEventListener("click", plotDepletedBikes);
 
     socket.on(`bikestop ${city.city_name}`, bike => {
         let marker = bikeMarkers[bike.bikeId];
-    
+
         bikeData[bike.bikeId].state = bike.state;
-        marker.setStyle({ color: "#3388ff" });
-        marker.bindPopup(
-            `ID: ${bike.bikeId}<br>
-            Battery: ${bike.battery}<br>
-            Status: ${bike.status}<br>
-            Position: ${bike.position}<br>
-            State: ${bike.state}`
-            );
+        bikeMarkers[bike.bikeId].setStyle({ color: "#3388ff" });
+        bikePopups[bike.bikeId].setContent(`ID: ${bike.bikeId}<br>
+               Battery: ${bike.battery.toFixed(5)}<br>
+               Status: ${bike.status}<br>
+               Position: ${bike.position}<br>
+               State: ${bike.state}`);
         if (bike.state === "free" && trackFreeBikes === false) {
             bikeLayer.removeLayer(marker);
             bikeData[bike.bikeId].removed = true;
@@ -123,10 +122,16 @@ depletedBikesBtn.addEventListener("click", plotDepletedBikes);
     });
 
     function moveBike(bike) {
-        let bikeId = bike["bikeId"];
-        let latlong = bike.position.split(" ");
+        let bikeId = bike.bikeId;
+        // let latlong = bike.position;
+        let latlong = bike.position;
         window.requestAnimationFrame(() => {
             bikeMarkers[bikeId].setLatLng(latlong);
+            bikePopups[bikeId].setContent(`ID: ${bike.bikeId}<br>
+               Battery: ${bike.battery.toFixed(1)}<br>
+               Status: ${bike.status}<br>
+               Position: ${latlong[0].toFixed(5)} ${latlong[1].toFixed(5)}<br>
+               State: ${bike.state}`);
         });
     }
 
@@ -225,20 +230,21 @@ function prepParking() {
 
 function prepBikes() {
     for (const row of Object.entries(bikeData)) {
-        let latlong = row[1].position.split(" ");
+        let latlong = row[1].position;
         let circleColor = row[1].state === "moving" ? "#9B59B6" : "#3388ff";
         let marker = new L.circle(latlong, {
             radius: 6,
             zIndexOffset: 1,
             color: circleColor
-        }).bindPopup(
-            `ID: ${row[1].bikeId}<br>
-            Battery: ${row[1].battery}<br>
-            Status: ${row[1].status}<br>
-            Position: ${row[1].position}<br>
-            State: ${row[1].state}`
-            );
-        bikePopups[row[1].bikeId] = L.popup();
+        })
+        let popup = L.popup().setContent(`ID: ${row[1].bikeId}<br>
+               Battery: ${row[1].battery}<br>
+               Status: ${row[1].status}<br>
+               Position: ${row[1].position}<br>
+               State: ${row[1].state}`);
+
+        bikePopups[row[1].bikeId] = popup;
+        marker.bindPopup(popup);
         bikeMarkers[row[1].bikeId] = marker;
         row[1].removed = true;
     }
