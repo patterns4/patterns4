@@ -20,7 +20,7 @@ function startBikes() {
         let data = { "bikeId": bikeId.toString(), "userId": userId.toString() }
     
         intcount++;
-        if (Math.round(Math.random() * 1)) {
+        if (! Math.round(Math.random() * 2)) {
             fetch("http://express:1337/cykel/rent", {
                 method: 'POST',
                 body: new URLSearchParams(data)
@@ -28,6 +28,6 @@ function startBikes() {
                 // .then(res => res.json())
                 // .then(json => console.log(json));
         }
-    }, 300);
+    }, 500);
 }
 

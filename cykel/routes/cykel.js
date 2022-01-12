@@ -3,8 +3,8 @@
 import { Router } from 'express';
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { connect, getBikes, bikesToCities, getParking, logTrip, updateBike } from "../src/bikes_db.js";
-import haversine from 'haversine-distance';
+import { connect, getBikes, getParking, logTrip, updateBike } from "../src/bikes_db.js";
+import haversine from 'haversine';
 
 const router = Router();
 const httpServer = createServer()
@@ -18,7 +18,13 @@ httpServer.listen(5000, () => {
    console.log("Websocket started at port ", 5000)
 });
 
-io.on('connection', () => { 
+io.on('connection', async () => {
+    parking = await getParking();
+    // console.log(parking);
+    for (const row of myMap) {
+        // console.log(row[1].checkState());
+        row[1].state = await row[1].checkState();
+    }
     console.log('a user connected');
     io.emit("message", "you're connected");
     io.emit("bikelocation", JSON.stringify(Object.fromEntries(myMap)));
@@ -26,7 +32,6 @@ io.on('connection', () => {
 
 const myMap = new Map();
 let bikeIdCounter = 1;
-let logIdCounter = 0;
 let parking;
 
 async function bikeInit() {
@@ -46,7 +51,6 @@ async function bikeInit() {
 
 async function toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) {
     try {
-        // await connect();
         await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost);
     } catch (e) {
         console.log(e);
@@ -81,7 +85,6 @@ router.get('/:msg', function(req, res) {
 // battery: 50
 //
 // alternatively send no arguments at all, and they will be generated
-
 router.post('/create/', (req, res) => { //:msg
     // random variables to use if no data given when constructor called
     var randombat = Math.floor((Math.random() * 100) + 1); //random 1-100
@@ -143,8 +146,13 @@ router.post('/create/', (req, res) => { //:msg
 // userId: 2
 // destination: [75,50]
 //
-// 
-
+//
+// router.get('/reinit', async () => {
+//     parking = await getParking();
+//     for (const row of myMap) {
+        // row.state = checkState();
+//     }
+// })
 
 router.post('/rent/', (req, res) => { //:msg
     let bikeId = parseInt(req.body.bikeId);
@@ -216,29 +224,33 @@ class Cykel {
     }
 
     checkState() {
+        if (this.moving) {
+            return "moving"
+        }
+
         if (this.battery < 10) {
             return "depleted";
         }
         for (const row of parking) {
             let position = this.position;
             let spot = row.position.split(" ");
-            
-            position = { lat: position[0], lng: position[0] };
-            spot = { lat: spot[0], lng: spot[1] };
 
-            if (haversine(spot, position) <= 50) {
+            position = {latitude: position[0], longitude: position[1]};
+            spot = {latitude: spot[0], longitude: spot[1]};
+
+            if (haversine(spot, position, {unit: 'meter'}) <= 50) {
                 return "parked";
             }
         }
-        return "free";        
+        return "free";
     }
 
     decideDestination(position) {
         function operator(n, k) {
             return [n - k, n + k][Math.round(Math.random() * 1)];
         }
-        let destination = [ operator(position[0], Math.random() * 0.001),
-                            operator(position[1], Math.random() * 0.001) ];
+        let destination = [ operator(position[0], Math.random() * 0.01),
+                            operator(position[1], Math.random() * 0.01) ];
 
         return destination.map(x => Math.round((x * 100000)) / 100000);
     }
@@ -258,14 +270,12 @@ class Cykel {
 
         let cost = start_fee + (delta_time * per_sec);
         toLog(this.rentDateTime, this.orgPos, end_time, delta_time, this.position, this.rentedBy, this.bikeId, cost);
-        // return [cost, delta_time];
     }
 
     simulateTravel() {
         console.log(`Bike nr ${this.bikeId} is running`);
         let first = Math.round(Math.random());
         let second = first === 1 ? 0 : 1;
-        // let position = this.position.map(x => parseFloat(x));
         let destination = this.decideDestination(this.position);
         let diffLat = this.position[0] - destination[0];
         let diffLong = this.position[1] - destination[1];
@@ -291,8 +301,6 @@ class Cykel {
                 console.log(`Bike nr ${this.bikeId} has stopped at position:`);
                 console.log(this.position);
                 io.emit(`bikestop ${this.cityName}`, this);
-                // let end_time = new Date();
-                // toLog(this.rentDateTime, orgPos, end_time, costTime[1], this.position, this.rentedBy, this.bikeId, cost[0]);
             });
         })
     }
@@ -311,11 +319,8 @@ class Cykel {
                     resolve();
                     return;
                 }
-
-                // position[ind] += increment;
                 this.position[ind] += increment;
                 bike.battery -= 0.1;
-                // bike.position = position.join(" ");
                 io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
 
@@ -325,18 +330,11 @@ class Cykel {
 
     // called by the rent route, provides input for the travel function
     async rent(data) {
-        // let position = this.position;
-        // let destination = data.destination;
         let userId = data.userId;
         let datetime = data.datetime;
-        // let cityName = this.bikeCity();
-        // todo group these states
         this.rentedBy = userId;
         this.moving = true;
         this.state = "moving";
-        this.speed = 5.55; // 20 km/h
-        // this.destination = destination;
-        // this.originalDistance = this.distance(position, destination);
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
 
