@@ -1,12 +1,17 @@
 // Express server
-const port = process.env.PORT || 1337;
 import express from "express";
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import * as router from './routes/cykel.js';
+import { connect, getBikes, getParking } from "./src/bikes_db.js";
+import io from './socket.js';
+import Cykel from './bikeclass.js';
 
+const port = process.env.PORT || 1337;
 const app = express();
+const myMap = new Map();
+const socket = io.init();
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -51,9 +56,24 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(port, async () => {
+(async () => {
+    try {
+        await connect();
+        let bikes = await getBikes();
+        let parking = await getParking();
+    
+        for (const row of bikes) {
+            let bike = new Cykel(row, parking);
+            myMap.set(bike.bikeId, bike);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+})();
+
+app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
 
-export { app };
+export { app, socket, myMap };
 
