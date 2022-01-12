@@ -77,6 +77,7 @@ CREATE TABLE `log` (
   `end_point` VARCHAR(35) NULL DEFAULT NULL,
   `user_id` INT(11) NULL DEFAULT NULL,
   `bike_id` INT(11) NULL DEFAULT NULL,
+  `cost` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`log_id`),
   INDEX `user_id` (`user_id` ASC),
   INDEX `bike_id` (`bike_id` ASC),
