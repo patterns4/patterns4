@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import * as router from './routes/cykel.js';
-import { connect, getBikes, getParking } from "./src/bikes_db.js";
+import { connect, getBikes, getParking } from "./db/dbfunctions.js";
 import io from './socket.js';
 import Cykel from './bikeclass.js';
 

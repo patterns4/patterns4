@@ -1,7 +1,7 @@
 "use strict";
 
 import * as mysql from "promise-mysql";
-import { config } from "../db/bikes.js";
+import { config } from "./dbconfig.js";
 import haversine from 'haversine';
 
 let db;

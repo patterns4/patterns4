@@ -1,5 +1,5 @@
 import haversine from 'haversine';
-import { updateBike, logTrip } from './src/bikes_db.js';
+import { updateBike, logTrip } from './db/dbfunctions.js';
 import { socket as io } from './app.js';
 
 class Cykel {

@@ -1,6 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { getParking } from './src/bikes_db.js';
+import { getParking } from './db/dbfunctions.js';
 import { myMap } from './app.js';
 
 const io = {
