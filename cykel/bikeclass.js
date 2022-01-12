@@ -127,8 +127,9 @@ class Cykel {
                     return;
                 }
                 this.position[ind] += increment;
-                bike.battery -= this.batteryDepletion;
-                io.emit(cityName, JSON.stringify(bike));
+                this.battery -= this.batteryDepletion;
+                this.battery = Math.round(this.battery);
+                io.emit(cityName, JSON.stringify(this));
                 callCount += 1;
 
             }, 1000);
