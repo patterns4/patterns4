@@ -48,7 +48,7 @@ async function seedBikes (position, n, city) {
     return bike_id;
 }
 
-async function logTrip (log_id, start_time, start_point, end_time, end_point, user_id, bike_id) {
+async function logTrip (start_time, start_point, end_time, end_point, user_id, bike_id, cost) {
     // let log_id = data.log_id;
     // let start_time = data.start_time;
     // let start_point = data.start_point;
@@ -57,9 +57,11 @@ async function logTrip (log_id, start_time, start_point, end_time, end_point, us
     // let user_id = data.user_id;
     // let bike_id = data.bike_id;
 
-    const sql =  `INSERT INTO log VALUES(?, ?, ?, ?, ?, ?, ?)`;
+    // const sql =  `INSERT INTO log VALUES(?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO log(start_time, start_point, end_time, end_point, user_id, bike_id, cost) VALUES(?, ?, ?, ?, ?, ?, ?)`;
         
-    await db.query(sql, [log_id, start_time, start_point, end_time, end_point, user_id, bike_id]);
+    await db.query(sql, [start_time, start_point, end_time, end_point, user_id, bike_id, cost]);
+    // await db.query(sql, [log_id, start_time, start_point, end_time, end_point, user_id, bike_id]);
     // await db.query(sql, [1, '9999-12-31 23:59:59', 3, '9999-12-31 23:59:59', 5, 1, 7]);
 
     return log_id;
