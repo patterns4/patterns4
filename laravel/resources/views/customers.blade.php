@@ -12,6 +12,12 @@
 {{-- @if (isset($customers)) --}}
 
     <table class="table-auto">
+        <th>id</th>
+        <th>name</th>
+        <th>phone</th>
+        <th>email</th>
+        <th>balance</th>
+        <th>manage</th>
         @foreach ($customers as $customer)
         <tr class="bg-emerald-200">
             <td> {{ $customer->user_id }}</td>

@@ -243,3 +243,7 @@ p {
   height: 30% !important;
   width: 30% !important;
 }
+
+.lowBatt td {
+  background: red;
+}

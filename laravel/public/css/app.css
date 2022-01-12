@@ -158789,3 +158789,6 @@ p {
   }
 }
 
+.lowBatt td {
+  background: red;
+}
