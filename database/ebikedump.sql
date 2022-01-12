@@ -87,6 +87,7 @@ CREATE TABLE `log` (
   `end_point` varchar(35) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `bike_id` int(11) DEFAULT NULL,
+  `cost` int(11) DEFAULT NULL,
   PRIMARY KEY (`log_id`),
   KEY `user_id` (`user_id`),
   KEY `bike_id` (`bike_id`),

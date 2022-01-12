@@ -305,8 +305,25 @@ class Cykel {
                 this.state = this.checkState();
                 console.log(this.battery);
                 io.emit(`bikestop ${this.cityName}`, this);
+
+               //cost logic
+                let start_time = this.rentDateTime;
                 let end_time = new Date();
-                let cost = Math.floor((Math.random() * 100) + 1); //random 1-100
+                let delta_time = parseInt(Math.abs(end_time.getTime() - start_time.getTime()) / (1000));
+                let per_sec = 0.08333;
+                let start_fee;
+                
+                if (this.state == "parked") {
+                    start_fee = 5;
+                } else if (this.state == "free") {
+                    start_fee = 10;
+                }
+
+                let cost = start_fee + (delta_time * per_sec);
+               //
+
+               console.log(delta_time + " seconds long trip, costing " + cost + " kr");
+
                 toLog(this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId, cost);
             })
                 .then(() => {

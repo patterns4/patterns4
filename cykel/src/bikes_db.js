@@ -64,7 +64,7 @@ async function logTrip (start_time, start_point, end_time, end_point, user_id, b
     // await db.query(sql, [log_id, start_time, start_point, end_time, end_point, user_id, bike_id]);
     // await db.query(sql, [1, '9999-12-31 23:59:59', 3, '9999-12-31 23:59:59', 5, 1, 7]);
 
-    return log_id;
+    return bike_id;
 }
 
 async function bikesToCities() {

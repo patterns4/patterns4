@@ -69,6 +69,7 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 -- Table `log`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
   `log_id` INT(11) NOT NULL AUTO_INCREMENT,
   `start_time` DATETIME NULL DEFAULT NULL,
