@@ -25,6 +25,7 @@ Route::get('/admin', function() {
 Route::get('/cities', [CitiesController::class, 'show']);
 Route::get('/cities/{id}', [CitiesController::class, 'citymap']);
 Route::post('/cities/addparking', [CitiesController::class, 'addparking']);
+Route::post('/cities/deleteparking', [CitiesController::class, 'deleteparking']);
 
 Route::get('/bikes', [BikesController::class, 'show']);
 Route::get('/customers', [CustomersController::class, 'show']);

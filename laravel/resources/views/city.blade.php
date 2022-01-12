@@ -31,7 +31,17 @@
         <tr>
             <td> {{ $spot->parking_name }} </td>
             <td> {{ $spot->position }}  </td>
-            <td><a href="/parking/{{$spot->parking_id }}"><i class="fas trash-alt"></i></a></td>
+            <td> {{ $spot->parking_id }} </td>
+            <td>
+                <form method="POST" action="deleteparking">
+                    @csrf <!-- {{ csrf_field() }} -->
+                    <input type="hidden" name="city_id" value={{ json_decode($city)->city_id }}>
+                    <input type="hidden" name="parking_id" value={{ $spot->parking_id }}>
+                    <button type="submit" action>
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+            </td>
         </tr>
     @endforeach
 </table>
