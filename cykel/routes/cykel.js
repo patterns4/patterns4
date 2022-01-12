@@ -46,10 +46,10 @@ async function bikeInit() {
     }
 }
 
-async function toLog(start_time, start_point, end_time, end_point, user_id, bike_id, cost) {
+async function toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) {
     try {
         await connect();
-        await logTrip(start_time, start_point, end_time, end_point, user_id, bike_id, cost);
+        await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost);
     } catch (e) {
         console.log(e);
     }
@@ -324,7 +324,7 @@ class Cykel {
 
                console.log(delta_time + " seconds long trip, costing " + cost + " kr");
 
-                toLog(this.rentDateTime, orgPos, end_time, this.position, this.rentedBy, this.bikeId, cost);
+                toLog(this.rentDateTime, orgPos, end_time, delta_time, this.position, this.rentedBy, this.bikeId, cost);
             })
                 .then(() => {
                     //cleanup when arrived
