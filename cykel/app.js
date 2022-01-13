@@ -5,7 +5,6 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import * as router from './routes/cykel.js';
-import * as router2 from './routes/v1.js';
 
 const app = express();
 
@@ -25,10 +24,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// cykel-backend
 app.use('/cykel', router.default); // /:msg
-// rest api
-app.use('/v1', router2.default); // /:msg
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
