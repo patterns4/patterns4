@@ -2,6 +2,7 @@
 
 ## Start ##
     docker-compose up
+Use http://localhost:8000
 
 ## Stop ##
     docker-compose down  
