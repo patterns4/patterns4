@@ -4,4 +4,4 @@
 
 ### stop: docker-compose down
 
-### REST API
+# REST API Documentation
