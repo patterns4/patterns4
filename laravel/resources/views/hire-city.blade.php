@@ -176,7 +176,7 @@ function hideParkedBikes() {
 
 function prepBikes() {
     for (const row of Object.entries(bikeData)) {
-        let latlong = row[1].position.split(" ");
+        let latlong = row[1].position;
         let circleColor = row[1].state === "moving" ? "#9B59B6" : "#3388ff";
         let marker = new L.circle(latlong, {
             radius: 6,
@@ -197,17 +197,35 @@ function prepBikes() {
 }
 
 function searchBike(searchId) {
-    trackFreeBikesBikes = false;
-    trackMovingBikesBikes = false;
+    searchId = parseInt(searchId);
+    trackFreeBikes = false;
+    trackMovingBikes = true;
     trackParkedBikes = false;
     trackDepleted = false;
     for (const row of Object.entries(bikeData)) {
         if (row[1].bikeId === searchId) {
             if (row[1].removed === true) {
-                let marker = bikeMarkers[row[1].bikeId];
-                bikeLayer.addLayer(marker);
                 row[1].removed = false;
             }
+            let marker = bikeMarkers[row[1].bikeId];
+            let latlong = row[1].position;
+            let circleColor = row[1].state === "moving" ? "#9B59B6" : "#3388ff";
+            bikeLayer.removeLayer(marker);
+            marker = new L.circle(latlong, {
+                radius: 6,
+                zIndexOffset: 1,
+                color: circleColor
+            }).bindPopup(
+                `ID: ${row[1].bikeId}<br>
+                Battery: ${row[1].battery}<br>
+                Status: ${row[1].status}<br>
+                Position: ${row[1].position}<br>
+                State: ${row[1].state}<br>
+                <button class="button" type="button" onclick="hireBike(${row[1].bikeId})">Stop</button>`
+                );
+            bikeMarkers[row[1].bikeId] = marker;
+            bikeLayer.addLayer(marker);
+            marker.openPopup();
             continue;
         }
         let marker = bikeMarkers[row[1].bikeId];
