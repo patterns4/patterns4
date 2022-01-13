@@ -28,13 +28,7 @@
             <a href={{ url("/cities") }} class="{{ request()->path() == "cities" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-city"></span></a>
             <a href={{ url("/customers") }} class="{{ request()->path() == "customers" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-users"></span></a>
             <a href={{ url("/bikes") }} class="{{ request()->path() == "bikes" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-bicycle"></span></a>
-<<<<<<< HEAD
-        </nav>
-    </header>
-<main>
-=======
             <a href={{ url("/logs") }} class="{{ request()->path() == "logs" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-clipboard-list"></span></a>
         </nav>
     </header>
 <main>
->>>>>>> Dockerized3
