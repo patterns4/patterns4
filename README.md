@@ -1,9 +1,9 @@
 # patterns4
 
-## build and start ##
+## Start ##
     docker-compose up
 
-## stop ##
+## Stop ##
     docker-compose down  
 
 
