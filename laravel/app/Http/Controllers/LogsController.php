@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Log;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class LogsController extends Controller
@@ -17,5 +18,14 @@ class LogsController extends Controller
                     "user" => Auth::user()->user_id,
                 ];
         return view('history', $data);
+    }
+
+    public function pay($id)
+    {
+        $log = new Log();
+        $log->pay($id);
+        $customer = new User();
+        $customer->pay($id);
+        return redirect('/mobile/history');
     }
 }

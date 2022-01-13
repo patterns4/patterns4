@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/settings', functio
     return view('settings');
 })->name('settings');
 Route::post('mobile/settings/update', [CustomersController::class, 'updatepayment']);
+Route::post('mobile/history/pay/{id}', [LogsController::class, 'pay']);
 
 
 

@@ -53,4 +53,17 @@ class User extends Authenticatable
         ->orWhere('last_name', 'like', $querystr)
         ->get();
     }
+
+    public function pay($id)
+    {
+        $customer = $this->select('saldo')->where("user_id", $_POST["user_id"])->get()->first();
+        $saldo = $customer->saldo;
+        $saldo -= $_POST["cost".$id];
+        $this->where('user_id', $_POST["user_id"])
+            ->update(
+                [
+                'saldo' => $saldo
+                ]
+            );
+    }
 }

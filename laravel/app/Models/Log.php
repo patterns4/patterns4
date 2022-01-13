@@ -11,4 +11,14 @@ class Log extends Model
 
     protected $table = "log";
     public $timestamps = false;
+
+    public function pay($id)
+    {
+        $this->where('log_id', $id)
+            ->update(
+                [
+                'paid' => 1
+                ]
+            );
+    }
 }
