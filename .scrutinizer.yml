@@ -14,8 +14,6 @@ build:
             environment:
                 php:
                     version: 8.0
-                node: v15.14.0
-                express: v4.17.1
     tests:
         override:
             -
