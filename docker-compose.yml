@@ -2,7 +2,7 @@ version: "3.8"
 services:
   mysql:
     build: ./database
-    command: ["--default-authentication-plugin=mysql_native_password", "--max_connections=10000"]
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_PASSWORD: password
@@ -20,8 +20,6 @@ services:
       - app-network
   express:
     build: ./cykel
-    environment:
-      DB_CONFIG: docker
     ports:
       - "1337:1337"
       - "5000:5000"
@@ -33,8 +31,6 @@ services:
       - app-network
   laravel:
     build: ./laravel
-    environment:
-      APP_ENV: docker
     ports:
       - "8000:8000"
       - "8001:5000"
