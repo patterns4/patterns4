@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Bike;
 use App\Models\Parking;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class CitiesController extends Controller
 {
@@ -48,12 +49,11 @@ class CitiesController extends Controller
         $city = new City();
         $parking = new Parking();
         $cityData = $city->where("city_id", $id)->first();
-        // var_dump($cityData->city_name);
         $parkingData = $parking->where("city_name", $cityData->city_name)->get();
-        // var_dump($parkingData[0]);
 
         $data = [
-                    "city" => json_encode($cityData)
+                    "city" => json_encode($cityData),
+                    "user" => Auth::user()->user_id,
                 ];
 
         return view('hire-city', $data);
