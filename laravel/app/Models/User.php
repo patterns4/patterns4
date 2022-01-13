@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Authenticatable
+class User extends Authenticatable
 {
     use HasFactory;
 
     public $timestamps = false;
     protected $table = 'user';
+    protected $primaryKey = 'user_id';
     protected $fillable = [
         'first_name',
         'last_name',

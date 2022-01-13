@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Exception;
 use Socialite;
-use App\Models\Customer;
+use App\Models\User;
 
 class SocialController extends Controller
 {
@@ -24,7 +24,7 @@ class SocialController extends Controller
      
             $user = Socialite::driver('github')->user();
       
-            $searchUser = Customer::where('github_id', $user->id)->first();
+            $searchUser = User::where('github_id', $user->id)->first();
       
             if($searchUser){
       
@@ -33,7 +33,7 @@ class SocialController extends Controller
                 return redirect('mobile/hire');
       
             }else{
-                $gitUser = Customer::create([
+                $gitUser = User::create([
                     'first_name' => $user->name,
                     'last_name' => '',
                     'email' => $user->email,
@@ -65,13 +65,13 @@ class SocialController extends Controller
     {
         try {
             $user = Socialite::driver('facebook')->user();
-            $isUser = Customer::where('fb_id', $user->id)->first();
+            $isUser = User::where('fb_id', $user->id)->first();
      
             if($isUser){
                 Auth::login($isUser);
                 return redirect('mobile/hire');
             }else{
-                $createUser = Customer::create([
+                $createUser = User::create([
                     'first_name' => $user->name,
                     'last_name' => '',
                     'email' => $user->email,
