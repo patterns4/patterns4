@@ -69,6 +69,15 @@ A bike has the following attributes:
 > 
 > city_name
 
+Status can be:
+> parked
+>
+> free
+> 
+> moving
+>
+> depleted
+
 ### GET all bikes
 ```v1/bike/```
 
