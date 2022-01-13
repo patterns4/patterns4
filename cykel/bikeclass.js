@@ -67,7 +67,7 @@ class Cykel {
         let end_time = new Date();
         let delta_time = parseInt(Math.abs(end_time.getTime() - start_time.getTime()) / (1000));
         let per_sec = 0.08333;
-        let start_fee;
+        let start_fee = 10;
                 
         if (this.state == "parked") {
             start_fee = 5;

@@ -3,6 +3,9 @@ import express from "express";
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+
+// const helmet = require('helmet');
+
 import * as router from './routes/cykel.js';
 import * as router2 from './routes/v1.js';
 import { connect, getBikes, getParkings } from "./db/dbfunctions.js";
@@ -21,6 +24,10 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use(cors());
+
+// adding morgan to log HTTP requests
+app.use(morgan('combined'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
