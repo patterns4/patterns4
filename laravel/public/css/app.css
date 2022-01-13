@@ -310,12 +310,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 50;
 }.col-span-6{
   grid-column: span 6 / span 6;
-}.m-1{
-  margin: 0.25rem;
 }.m-2{
   margin: 0.5rem;
 }.m-3{
   margin: 0.75rem;
+}.m-1{
+  margin: 0.25rem;
 }.mx-auto{
   margin-left: auto;
   margin-right: auto;
@@ -400,10 +400,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2.5rem;
 }.h-20{
   height: 5rem;
-}.h-3\/6{
-  height: 50%;
 }.h-80{
   height: 20rem;
+}.h-3\/6{
+  height: 50%;
 }.min-h-screen{
   min-height: 100vh;
 }.w-5{
@@ -621,6 +621,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.bg-gray-200{
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}.bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}.bg-blue-700{
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }.bg-sky-700{
   --tw-bg-opacity: 1;
   background-color: rgb(3 105 161 / var(--tw-bg-opacity));
@@ -630,12 +636,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.bg-teal-600{
   --tw-bg-opacity: 1;
   background-color: rgb(13 148 136 / var(--tw-bg-opacity));
-}.bg-blue-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
-}.bg-blue-700{
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }.bg-emerald-200{
   --tw-bg-opacity: 1;
   background-color: rgb(167 243 208 / var(--tw-bg-opacity));
@@ -654,14 +654,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.5rem;
 }.p-6{
   padding: 1.5rem;
-}.p-5{
-  padding: 1.25rem;
 }.p-4{
   padding: 1rem;
-}.p-8{
-  padding: 2rem;
 }.p-3{
   padding: 0.75rem;
+}.p-5{
+  padding: 1.25rem;
+}.p-8{
+  padding: 2rem;
 }.px-4{
   padding-left: 1rem;
   padding-right: 1rem;
@@ -145643,6 +145643,8 @@ video {
 }#mobile-map {
     width: 100%;
     height: 40vh;
+}th {
+    text-align: center;
 }.hover\:border-gray-300:hover{
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));

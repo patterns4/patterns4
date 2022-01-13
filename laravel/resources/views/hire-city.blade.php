@@ -141,7 +141,7 @@ function hideBikes(state)  {
 
 
 function hireBike(bike_id) {
-    let hireData = { "bikeId": bike_id.toString(), "userId": {{ Auth::user()->id }} };
+    let hireData = { "bikeId": bike_id.toString(), "userId": {{ Auth::user()->user_id }} };
     fetch("http://127.0.0.1:1337/cykel/rent", {
                 method: 'POST',
                 body: new URLSearchParams(hireData)

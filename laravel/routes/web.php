@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{CitiesController, CustomersController, BikesController, SocialController};
+use App\Http\Controllers\{CitiesController, CustomersController, BikesController, SocialController, LogsController};
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +37,7 @@ Route::get('/mobile', function () {
 });
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire', [CitiesController::class, 'showMobile'])->name('hire');
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire/{id}', [CitiesController::class, 'citymapMobile'])->name('hire-city');
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', function () {
-    return view('history');
-})->name('history');
+Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', [LogsController::class, 'show'])->name('history');
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/settings', function () {
     return view('settings');
 })->name('settings');

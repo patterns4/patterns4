@@ -4,117 +4,26 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg relative scrollable">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center h-80">
                 <div class="flex-col items-center relative">
-                    <h1 class="py-3 text-xl font-semibold sticky-top-title">History</h1>
-                    <table>
-                        <tr>
-                            <th>Month</th>
-                            <th>Savings</th>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>$100</td>
-                        </tr>
-                    </table>
+                    <h1 class="py-3 text-xl font-semibold sticky-top-title">History - #{{ $user }}</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Start Time</th>
+        <th>Start Point</th>
+        <th>End Time</th>
+        <th>End Point</th>
+        <th>Bike ID</th>
+    </tr>
+@foreach ($logs as $log)
+<tr>
+    <td>{{$log->log_id}}</td>
+    <td>{{$log->start_time}}</td>
+    <td>{{$log->start_point}}</td>
+    <td>{{$log->end_time}}</td>
+    <td>{{$log->end_point}}</td>
+    <td>{{$log->bike_id}}</td>
+</tr>    
+@endforeach
                 </div>
             </div>
         </div>
