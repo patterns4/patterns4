@@ -47,4 +47,11 @@ class CustomersController extends Controller
         $customer->deletecustomer();
         return redirect('/customers');
     }
+
+    public function updatepayment()
+    {
+        $customer = new User();
+        $customer->updatecustomer();
+        return redirect('/mobile/settings');
+    }
 }

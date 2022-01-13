@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', [LogsCon
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/settings', function () {
     return view('settings');
 })->name('settings');
+Route::post('mobile/settings/update', [CustomersController::class, 'updatepayment']);
 
 
 
