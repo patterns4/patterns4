@@ -58,7 +58,7 @@
                                     </label>
                                 </div>
 
-                                <button formaction="history/update" type="submit" class="block bg-blue-500 my-3 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">Change</button>
+                                <button formaction="settings/update" type="submit" class="block bg-blue-500 my-3 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">Change</button>
                             </form>
 
                         </div>

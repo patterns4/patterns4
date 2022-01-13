@@ -1,7 +1,7 @@
 let config = {
-    "host":     "127.0.0.1",
+    "host":     "mysql",
     "user":     "user",
-    "password": "pass",
+    "password": "password",
     "database": "ebike",
     "port": "3306"
 }
