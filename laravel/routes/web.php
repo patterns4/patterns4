@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-USE App\Http\Controllers\{CitiesController, CustomersController, BikesController};
+USE App\Http\Controllers\{CitiesController, CustomersController, BikesController, LogsController};
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +35,5 @@ Route::post('/customers/customer/save', [CustomersController::class, 'updatecust
 Route::post('/customers/customer/delete', [CustomersController::class, 'deletecustomer']);
 Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
 Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
+
+Route::get('/logs', [LogsController::class, 'show']);
