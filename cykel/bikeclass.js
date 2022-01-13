@@ -129,7 +129,7 @@ class Cykel {
                 }
                 this.position[ind] += increment;
                 this.battery -= this.batteryDepletion;
-                this.battery = Math.round(this.battery);
+                this.battery = parseFloat(this.battery.toFixed(1));
                 io.emit(cityName, JSON.stringify(this));
                 callCount += 1;
 
