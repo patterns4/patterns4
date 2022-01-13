@@ -1,9 +1,11 @@
 "use strict";
 
 import * as mysql from "promise-mysql";
-import { config } from "./dbconfig.js";
 import haversine from 'haversine';
+import { config as dockerConfig } from "./dbconfig.docker.js";
+import { config as localConfig } from "./dbconfig.js";
 
+let config = process.env.DB_CONFIG === "docker" ? dockerConfig : localConfig;
 let db;
 let bikes;
 

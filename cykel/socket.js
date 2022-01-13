@@ -11,7 +11,7 @@ const io = {
             path: '/',
             cors: '*'
         });
-        
+
         this.httpServer.listen(5000, () => {
            console.log("Websocket started at port ", 5000)
         });

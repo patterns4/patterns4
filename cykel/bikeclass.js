@@ -13,7 +13,7 @@ class Cykel {
         this.battery = data.battery;
         this.moving = false;
         this.cityName = data.city_name;
-        this.travelMultiplier = 0.001;
+        this.travelMultiplier = 0.01;
         this.batteryDepletion = 0.1;
     }
 
@@ -105,8 +105,9 @@ class Cykel {
                 this.calcCostAndLog();
                 updateBike(this.position, this.battery, this.state, this.bikeId);
 
-                console.log(`Bike nr ${this.bikeId} has stopped at position:`);
+                console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state} at position:`);
                 console.log(this.position);
+
                 io.emit(`bikestop ${this.cityName}`, this);
             });
         })
