@@ -13,26 +13,34 @@ All of our data is open and free to read, but at this phase not open for third p
 
 The API in the docker container can be reached at localhost:1337/
 
-##### GET all cities
-v1/city/
+## Cities
+A city has the following attributes:
+> city_id
+> 
+> city_name
+> 
+> position
 
-##### GET a specific city
-v1/city/12
+### GET all cities
+```v1/city/```
 
-##### GET all bikes
-v1/bike/
+### GET a specific city
+```v1/city/12```
 
-##### GET a specific city
-v1/bike/12
+### GET all bikes
+```v1/bike/```
 
-v1/station/
+### GET a specific city
+```v1/bike/12```
 
-v1/station/1
+```v1/station/```
 
-v1/parking/
+```v1/station/1```
 
-v1/parking/1
+```v1/parking/```
 
-v1/log/
+```v1/parking/1```
 
-v1/log/1
+```v1/log/```
+
+```v1/log/1```
