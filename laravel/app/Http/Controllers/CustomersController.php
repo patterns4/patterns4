@@ -29,16 +29,16 @@ class CustomersController extends Controller
 
     public function customerdetails($id)
     {
-        $customer = Customer::find($id);
-        $data = ["customer" => $customer];
+        $customer = new Customer();
+        $data = ["customer" => $customer->firstWhere('user_id', $id)];
         return view('customer', $data);
     }
 
-    public function updatecustomer(Request $request)
+    public function updatecustomer()
     {
         $customer = new Customer();
         $customer->updatecustomer();
-        return redirect('/customers/' . $request->user_id);
+        return redirect('/customers/' . $_POST["user_id"]);
     }
 
     public function deletecustomer()

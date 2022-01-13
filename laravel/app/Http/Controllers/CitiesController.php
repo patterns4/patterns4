@@ -20,43 +20,18 @@ class CitiesController extends Controller
 
     public function citymap($id)
     {
-        $city = City::find($id);
+        $city = new City();
         $parking = new Parking();
-        // $cityData = $city->where("city_id", $id)->first();
-        $parkingData = $parking->where("city_name", $city->city_name)->get();
+        $cityData = $city->where("city_id", $id)->first();
+        // var_dump($cityData->city_name);
+        $parkingData = $parking->where("city_name", $cityData->city_name)->get();
+        // var_dump($parkingData[0]);
 
         $data = [
-                    "city" => json_encode($city),
+                    "city" => json_encode($cityData),
                     "parking" => json_encode($parkingData),
                 ];
 
         return view('city', $data);
-    }
-
-    public function addparking(Request $request)
-    {
-        $parking = new Parking();
-        $position = $request->parking_position;
-        $name = $request->parking_name;
-        $city_name = $request->city_name;
-        $id = $request->redirect_url;
-
-        $parking->position = $position;
-        $parking->parking_name = $name;
-        $parking->city_name = $city_name;
-
-        $parking->save();
-
-        return redirect("/cities/" . $id);
-    }
-
-    public function deleteparking(Request $request)
-    {
-        $parking = Parking::find($request->parking_id);
-        $city_id = $request->city_id;
-
-        $parking->delete();
-
-        return redirect("/cities/" . $city_id);
     }
 }

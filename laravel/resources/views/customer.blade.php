@@ -1,5 +1,7 @@
 @include('header')
-
+@php
+    var_dump(request()->url());
+@endphp
 <div class="flex justify-center w-full">
 <form method="POST" class="w-min">
     @csrf <!-- {{ csrf_field() }} -->

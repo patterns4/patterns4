@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Bike extends Model
 {
     use HasFactory;
-    protected  $primaryKey = 'bike_id';
+
     protected $table = "bike";
     public $timestamps = false;
 }
