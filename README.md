@@ -53,20 +53,74 @@ Result:
         }
     ]
 
+## Cities
+A city has the following attributes:
+> city_id
+> 
+> city_name
+> 
+> position
+
 ### GET all bikes
 ```v1/bike/```
 
-### GET a specific city
+Result:
+
+### GET a specific bike
 ```v1/bike/12```
 
+Result:
+
+## Cities
+A city has the following attributes:
+> city_id
+> 
+> city_name
+> 
+> position
+
+### GET all charging stations
 ```v1/station/```
 
+Result:
+
+### GET a specific charging station
 ```v1/station/1```
 
+Result:
+
+## Cities
+A city has the following attributes:
+> city_id
+> 
+> city_name
+> 
+> position
+
+### GET all parking spots
 ```v1/parking/```
 
+Result:
+
+### GET a specific parking spot
 ```v1/parking/1```
 
+Result:
+
+## Cities
+A city has the following attributes:
+> city_id
+> 
+> city_name
+> 
+> position
+
+### GET all logs
 ```v1/log/```
 
+Result:
+
+### GET a specific log
 ```v1/log/1```
+
+Result:
