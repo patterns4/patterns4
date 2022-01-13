@@ -24,13 +24,15 @@ class LogsController extends Controller
                     "user" => Auth::user()->user_id,
                 ];
         return view('history', $data);
-}
+    }
 
-public function pay($id)
-{
-    $log = new Log();
-    $log->pay($id);
-    $customer = new User();
-    $customer->pay($id);
-    return redirect('/mobile/history');
+    public function pay($id)
+    {
+        $log = new Log();
+        $log->pay($id);
+        $customer = new User();
+        $customer->pay($id);
+        return redirect('/mobile/history');
+    }
+
 }
