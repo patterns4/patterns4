@@ -20,6 +20,8 @@ services:
       - app-network
   express:
     build: ./cykel
+    environment:
+      DB_CONFIG: docker
     ports:
       - "1337:1337"
       - "5000:5000"
@@ -31,6 +33,8 @@ services:
       - app-network
   laravel:
     build: ./laravel
+    environment:
+      APP_ENV: docker
     ports:
       - "8000:8000"
       - "8001:5000"
