@@ -76,7 +76,8 @@ class Cykel {
         }
 
         let cost = start_fee + (delta_time * per_sec);
-        this.toLog(this.rentDateTime, this.orgPos, end_time, delta_time, this.position, this.rentedBy, this.bikeId, cost);
+        let paid = false;
+        this.toLog(this.rentDateTime, this.orgPos, end_time, delta_time, this.position, this.rentedBy, this.bikeId, cost, paid);
     }
 
     simulateTravel() {
@@ -152,9 +153,9 @@ class Cykel {
         return data;
     }
 
-    async toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) {
+    async toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid) {
         try {
-            await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost);
+            await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost, paid);
         } catch (e) {
             console.log(e);
         }

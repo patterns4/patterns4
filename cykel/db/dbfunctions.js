@@ -100,12 +100,12 @@ async function seedBikes (position, n, city) {
     return bike_id;
 }
 
-async function logTrip (start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost)  {
-    const sql = `INSERT INTO log(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
+async function logTrip (start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid)  {
+    const sql = `INSERT INTO log(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     start_point = start_point.join(" ");
     end_point = end_point.join(" ");
     
-    await db.query(sql, [start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost]);
+    await db.query(sql, [start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid]);
 }
 
 async function updateBike(position, battery, state, bikeId) {

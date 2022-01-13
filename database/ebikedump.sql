@@ -89,6 +89,7 @@ CREATE TABLE `log` (
   `user_id` int(11) DEFAULT NULL,
   `bike_id` int(11) DEFAULT NULL,
   `cost` float DEFAULT NULL,
+  `paid` boolean DEFAULT false,
   PRIMARY KEY (`log_id`),
   KEY `user_id` (`user_id`),
   KEY `bike_id` (`bike_id`),
