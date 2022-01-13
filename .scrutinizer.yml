@@ -4,10 +4,8 @@ filter:
     excluded_paths: [vendor/*, test/*, build/*, database/*, public/js/app.js, models/User.php, cykel/coverage]
 
 build:
-    requires:
-      branch: Dockerized3
-    # environment:
-    #         node: v15.14.0
+    environment:
+            node: v15.14.0
     project_setup:
             override:
                 - true
