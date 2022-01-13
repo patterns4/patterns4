@@ -24,10 +24,6 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use(cors());
-
-// adding morgan to log HTTP requests
-app.use(morgan('combined'));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
