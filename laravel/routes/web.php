@@ -45,7 +45,7 @@ Route::get('/mobile', function () {
 });
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire', [CitiesController::class, 'showMobile'])->name('hire');
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire/{id}', [CitiesController::class, 'citymapMobile'])->name('hire-city');
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', [LogsController::class, 'show'])->name('history');
+Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', [LogsController::class, 'showMobile'])->name('history');
 Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/settings', function () {
     return view('settings');
 })->name('settings');

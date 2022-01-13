@@ -15,7 +15,7 @@ class LogsController extends Controller
         $data = ["logs" => $logs->all()];
         return view('logs', $data);
     }
-    public function mobileShow()
+    public function showMobile()
     {
         $logs = new Log();
         $logData = $logs->where("user_id", Auth::user()->user_id)->get();
