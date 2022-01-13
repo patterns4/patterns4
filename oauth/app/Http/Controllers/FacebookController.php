@@ -26,7 +26,7 @@ class FacebookController extends Controller
      
             if($isUser){
                 Auth::login($isUser);
-                return redirect('/dashboard');
+                return redirect('/hire');
             }else{
                 $createUser = User::create([
                     'name' => $user->name,
@@ -37,7 +37,7 @@ class FacebookController extends Controller
                 ]);
     
                 Auth::login($createUser);
-                return redirect('/dashboard');
+                return redirect('/hire');
             }
     
         } catch (Exception $exception) {

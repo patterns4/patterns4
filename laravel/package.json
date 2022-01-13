@@ -10,9 +10,22 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "alpinejs": "^3.0.6",
         "axios": "^0.21",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "postcss-import": "^14.0.1",
+        "resolve-url-loader": "^4.0.0",
+        "sass": "^1.43.5",
+        "sass-loader": "^12.3.0",
+        "tailwindcss": "^3.0.0"
+    },
+    "dependencies": {
+        "leaflet": "^1.7.1",
+        "leaflet.glify": "^3.2.0",
+        "leaflet.markercluster": "^1.5.3",
+        "node-fetch": "^3.1.0"
     }
 }
