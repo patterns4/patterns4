@@ -1,8 +1,8 @@
 "use strict";
 
 import * as mysql from "promise-mysql";
-import { config } from "../db/bikes.js";
-import haversine from 'haversine-distance';
+import { config } from "./dbconfig.js";
+import haversine from 'haversine';
 
 let db;
 let bikes;
@@ -114,10 +114,10 @@ export {
 async function decideState(position, parking) {
     for (const row of parking) {
         let latlong = row.position.split(" ").map(x => parseFloat(x));
-        let spot = { lat: latlong[0], lng: latlong[1] };
-        let bikePosition = { lat: position[0], lng: position[1] };
+        let spot = { latitude: latlong[0], longitude: latlong[1] };
+        let bikePosition = { latitude: position[0], longitude: position[1] };
 
-        if (haversine(spot, bikePosition) <= 50) {
+        if (haversine(spot, bikePosition, {unit: 'meter'}) <= 50) {
             return "parked";
         }
     }

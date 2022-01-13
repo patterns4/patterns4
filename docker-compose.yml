@@ -42,18 +42,18 @@ services:
     restart: on-failure
     networks:
       - app-network
-  # customers:
-  #   build: ./customers
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     express: 
-  #       condition: service_started
-  #     laravel:
-  #       condition: service_started
-  #   restart: on-failure
-  #   networks:
-  #     - app-network
+  customers:
+    build: ./customers
+    depends_on:
+      mysql:
+        condition: service_healthy
+      express: 
+        condition: service_started
+      laravel:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge

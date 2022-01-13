@@ -24,8 +24,14 @@ Route::get('/admin', function() {
 
 Route::get('/cities', [CitiesController::class, 'show']);
 Route::get('/cities/{id}', [CitiesController::class, 'citymap']);
+Route::post('/cities/addparking', [CitiesController::class, 'addparking']);
+Route::post('/cities/deleteparking', [CitiesController::class, 'deleteparking']);
+
 Route::get('/bikes', [BikesController::class, 'show']);
 Route::get('/customers', [CustomersController::class, 'show']);
 Route::get('/customers/{id}', [CustomersController::class, 'customerdetails']);
+
 Route::post('/customers/customer/save', [CustomersController::class, 'updatecustomer']);
 Route::post('/customers/customer/delete', [CustomersController::class, 'deletecustomer']);
+Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
+Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
