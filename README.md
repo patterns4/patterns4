@@ -1,9 +1,9 @@
 # patterns4
 
-build and start: 
+build and start:
     ```docker-compose up```
 
-stop: 
+stop:
     ```docker-compose down```  
 
 

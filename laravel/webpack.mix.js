@@ -12,11 +12,12 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        require('postcss-import'),
-        require('tailwindcss'),
-    ]);
+.postCss('resources/css/app.css', 'public/css', [
+    require('tailwindcss'),
+])
+.copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts',
+    'public/webfonts'
+);
 
-if (mix.inProduction()) {
-    mix.version();
-}
+// mix.sass('resources/scss/app.scss', 'public/css');

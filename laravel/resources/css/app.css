@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url(https://fonts.googleapis.com/css2?family=Lato&family=Noto+Sans+JP:wght@400;500;700;900&display=swap);
 /*!
  * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
@@ -159415,3 +159416,254 @@ th {
 .scroll-x {
     overflow-x: scroll !important;
 }
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "../../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/regular.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/solid.css";
+
+@import url(https://fonts.googleapis.com/css2?family=Lato&family=Noto+Sans+JP:wght@400;500;700;900&display=swap);
+* {
+  box-sizing: border-box;
+}
+
+.fa {
+    vertical-align: middle;
+}
+
+#map { 
+  height: 70vh;
+}
+
+input:focus {
+  outline: none;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+h1 {
+  font: 700 2.8rem "Noto Sans JP";
+  color: #0277BD;
+  margin: 0;
+  margin-bottom: 2.8rem;
+}
+
+h2 {
+  font: 700 1.6rem "Noto Sans JP";
+  color: #0277BD;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.mleft20prc {
+  margin-left: 20%;
+}
+
+nav {
+  /* background-color: #039BE5; */
+  color: #E0F2F1;
+  display: flex;
+  height: 7.5vh;
+  justify-content: space-around;
+  align-content: center;
+}
+
+nav a {
+  text-decoration: none;
+  font: 500 1.4rem "Noto Sans JP";
+  color: #E0F2F1;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* nav a:hover {
+  background-color: #0277BD;
+}
+
+.active {
+  background-color: #0277BD;
+} */
+
+body {
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+}
+
+main {
+  padding: 2.8rem;
+  height: 85vh;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin-bottom: 2.8rem;
+}
+
+.center {
+  width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+img {
+  max-height: 100%;
+}
+
+footer {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  font: 500 1.4rem "Noto Sans JP";
+  background: #039BE5;
+  color: #E0F2F1;
+  height: 7.5vh;
+}
+
+.game21,
+.yatzy {
+  min-height: 60vh;
+  display: grid;
+  /* justify-items: center; */
+  -moz-column-gap: 8.4rem;
+       column-gap: 8.4rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.flex-start {
+  justify-self: flex-start;
+}
+
+.flex-end {
+  justify-self: flex-end;
+}
+
+.fullwidth {
+  width: 100%;
+}
+
+.width50 {
+  width: 50%;
+}
+
+.width40 {
+  width: 40%;
+}
+
+.yatzy input[type=submit],
+.yatzy input[type=text],
+.yatzy select {
+  width: 100%;
+  height: 2.8rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.width80 {
+  width: 80%;
+}
+
+.dice {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dicecheck label {
+  font-size: 80px;
+  /* margin-right: 1rem; */
+  margin-bottom: 1rem;
+  line-height: 1rem;
+}
+
+.dicecheck .space {
+  height: 2.8rem;
+}
+
+input[type=checkbox]:checked + label {
+  /* border-bottom: 2px dashed #0277BD; */
+  color: #0277BD;
+}
+
+.dicecheck input[type=checkbox],
+.pickscore input[type=checkbox] {
+  display: none;
+}
+
+td {
+  padding-top: 0.5rem;
+  border-bottom: 1px dashed gray;
+}
+
+table th {
+  text-align: left;
+}
+
+table {
+  width: 80%;
+  margin-bottom: 2.8rem;
+}
+
+.books td {
+  text-align: left;
+  width: 33.3333333333%;
+  border: none;
+  padding-top: 1rem;
+}
+
+.books th {
+  padding-bottom: 1.4rem;
+}
+
+.books td img {
+  padding-bottom: 1rem;
+}
+
+.imgcell {
+  padding-bottom: 1.4rem;
+}
+
+.scoretable td, .scoretable th {
+  width: 25%;
+  text-align: left;
+}
+
+p {
+  min-height: 1rem;
+}
+
+.nobutt {
+  background-color: transparent;
+  border: none;
+  font-family: unset;
+}
+
+.chart-canvas {
+  display: flex;
+  height: 50% !important;
+  width: 50% !important;
+  margin: 0 auto;
+  margin-bottom: 2.8rem;
+  /* justify-self: center; */
+}
+
+.round {
+  height: 30% !important;
+  width: 30% !important;
+}
+
+.lowBatt td {
+  background: red;
+}
+>>>>>>> Dockerized3

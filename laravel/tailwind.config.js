@@ -1,18 +1,24 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('./node_modules/tailwindcss/colors');
 
 module.exports = {
-    content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './vendor/laravel/jetstream/**/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-    ],
-
-    theme: {
-        extend: {
-            fontFamily: {
-                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
-            },
-        },
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+    colors: {
+      sky: colors.sky,
+      cyan: colors.cyan,
+      gray: colors.gray,
+      blue: colors.blue,
+      teal: colors.teal,
+      white: colors.white,
     },
-};
+    boxShadow: {
+      'default': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}

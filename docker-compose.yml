@@ -2,7 +2,7 @@ version: "3.8"
 services:
   mysql:
     build: ./database
-    command: ["--default-authentication-plugin=mysql_native_password", "--max_connections=10000"]
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_PASSWORD: password
@@ -29,33 +29,8 @@ services:
     restart: on-failure
     networks:
       - app-network
-  # laravel:
-  #   build: ./laravel
-  #   ports:
-  #     - "8000:8000"
-  #     - "8001:5000"
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     express:
-  #       condition: service_started
-  #   restart: on-failure
-  #   networks:
-  #     - app-network
-  # customers:
-  #   build: ./customers
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     express: 
-  #       condition: service_started
-  #     laravel:
-  #       condition: service_started
-  #   restart: on-failure
-  #   networks:
-  #     - app-network
-  oauth:
-    build: ./oauth
+  laravel:
+    build: ./laravel
     ports:
       - "8000:8000"
       - "8001:5000"
@@ -63,6 +38,18 @@ services:
       mysql:
         condition: service_healthy
       express:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - app-network
+  customers:
+    build: ./customers
+    depends_on:
+      mysql:
+        condition: service_healthy
+      express: 
+        condition: service_started
+      laravel:
         condition: service_started
     restart: on-failure
     networks:

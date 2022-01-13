@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 let intcount = 0;
 
 console.log();
-console.log("Start renting bikes in 3 second");
+console.log("Start renting bikes in 5 second");
 console.log();
 
 setTimeout(startBikes, 2000);
@@ -20,13 +20,13 @@ function startBikes() {
         let data = { "bikeId": bikeId.toString(), "userId": userId.toString() }
 
         intcount++;
-        if (Math.round(Math.random() * 1)) {
-            fetch("http://127.0.0.1:1337/cykel/rent", {
+        if (! Math.round(Math.random() * 2)) {
+            fetch("http://express:1337/cykel/rent", {
                 method: 'POST',
                 body: new URLSearchParams(data)
             })
                 // .then(res => res.json())
                 // .then(json => console.log(json));
         }
-    }, 300);
+    }, 500);
 }

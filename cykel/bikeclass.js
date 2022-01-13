@@ -68,7 +68,7 @@ class Cykel {
         let delta_time = parseInt(Math.abs(end_time.getTime() - start_time.getTime()) / (1000));
         let per_sec = 0.08333;
         let start_fee = 10;
-                
+
         if (this.state == "parked") {
             start_fee = 5;
         } else if (this.state == "free") {
@@ -88,12 +88,12 @@ class Cykel {
         let diffLat = this.position[0] - destination[0];
         let diffLong = this.position[1] - destination[1];
         let diffArr = [ diffLat, diffLong ];
-        
+
         let increment = [
             diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
             diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
         ];
-        
+
         this.orgPos = this.position.map(x => Math.round(x * 100000) / 100000);
         io.emit(`bikestart ${this.cityName}`, this);
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
@@ -122,7 +122,7 @@ class Cykel {
             let bike = this;
 
             let intervalId = setInterval(() => {
-            
+
                 if (callCount > count || bike.battery <= 5) {
                     clearInterval(intervalId);
                     resolve();
@@ -175,7 +175,7 @@ class Cykel {
         } catch (e) {
             console.log(e);
         }
-    } 
+    }
 }
 
 export default Cykel;

@@ -16,12 +16,9 @@ const io = {
            console.log("Websocket started at port ", 5000)
         });
 
-        // return io;
         io.on('connection', async () => {
             let parking = await getParkings();
-            // console.log(parking);
             for (const row of myMap) {
-                // console.log(row[1].checkState());
                 row[1].state = await row[1].checkState(parking);
             }
             console.log('a user connected');
