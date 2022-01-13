@@ -1,10 +1,9 @@
 import haversine from 'haversine';
 import { updateBike, logTrip } from './db/dbfunctions.js';
-import { socket as io } from './app.js';
+import { socket as io, parking } from './app.js';
 
 class Cykel {
-    constructor(data, parking) {
-        this.parking = parking;
+    constructor(data) {
         this.bikeId = data.bike_id;
         this.position = data.position.split(" ").map(x => parseFloat(x));
         this.speed = data.speed;
@@ -101,7 +100,7 @@ class Cykel {
         this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
             .then(() => {
                 this.moving = false;
-                this.state = this.checkState(this.parking);
+                this.state = this.checkState(parking);
                 this.position = this.position.map(x => Math.round(x * 100000) / 100000);
                 this.calcCostAndLog();
                 updateBike(this.position, this.battery, this.state, this.bikeId);
