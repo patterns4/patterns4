@@ -21,7 +21,7 @@ async function getCities() {
 }
 
 async function getCity(city) {
-    let sql = `SELECT * FROM city WHERE city_id = ` + city + ';';
+    let sql = `SELECT * FROM city WHERE city_id = ` + city;
     return await db.query(sql);
 }
 
@@ -30,18 +30,8 @@ async function getBikes() {
     return await db.query(sql);
 }
 
-async function getBike(bike) {
-    let sql = `SELECT * FROM bike WHERE bike_id = ` + bike + ';';
-    return await db.query(sql);
-}
-
 async function getStations() {
     let sql = `SELECT * FROM station;`;
-    return await db.query(sql);
-}
-
-async function getStation(station) {
-    let sql = `SELECT * FROM station WHERE station_id = ` + station + ';';
     return await db.query(sql);
 }
 
@@ -50,20 +40,11 @@ async function getParkings() {
     return await db.query(sql);
 }
 
-async function getParking(parking) {
-    let sql = `SELECT * FROM parking WHERE parking_id = ` + parking + ';';
-    return await db.query(sql);
-}
-
 async function getLogs() {
     let sql = `SELECT * FROM log;`;
     return await db.query(sql);
 }
 
-async function getLog(log) {
-    let sql = `SELECT * FROM log WHERE log_id = ` + log + ';';
-    return await db.query(sql);
-}
 
 
 async function seedBikes (position, n, city) {
@@ -137,13 +118,13 @@ export {
     getCities,
     getCity,
     getBikes,
-    getBike,
+    // getBike,
     getStations,
-    getStation,
+    // getStation,
     getParkings,
-    getParking,
+    // getParking,
     getLogs,
-    getLog,
+    // getLog,
 
     connect,
     seedBikes,

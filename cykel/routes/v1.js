@@ -7,13 +7,13 @@ import {
         getCities,
         getCity,
         getBikes,
-        getBike,
+        // getBike,
         getStations,
-        getStation,
+        // getStation,
         getParkings,
-        getParking,
+        // getParking,
         getLogs,
-        getLog,
+        // getLog,
 
         connect,
         bikesToCities,
@@ -34,7 +34,7 @@ httpServer.listen(5001, () => {
    console.log("Websocket started at port ", 5001);
 });
 
-io.on('connection', () => {
+io.on('connection', () => { 
     console.log('a user connected');
     io.emit("message", "you're connected");
     io.emit("bikelocation", JSON.stringify(Object.fromEntries(myMap)));
@@ -49,7 +49,7 @@ async function bikeInit() {
         await connect();
         let bikes = await getBikes();
         parking = await getParkings();
-
+    
         for (const row of bikes) {
             let bike = new Cykel(row);
             myMap.set(bike.bikeId, bike);
@@ -71,136 +71,44 @@ async function toLog(start_time, start_point, end_time, travel_time, end_point, 
 
 bikeInit();
 
-router.get('/city/', async function(req, res) {
-    let ans;
-    try {
-        ans = await getCities();
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
 router.get('/city/:msg', async function(req, res) {
     let msg = parseInt(req.params.msg);
     let ans;
 
-    try {
-        ans = await getCity(msg);
-    } catch (e) {
-        console.log(e);
+    if (msg > 0) {
+        try {
+            ans = await getCity(msg);
+        } catch (e) {
+            console.log(e);
+        }
+    } else {
+        try {
+            ans = await getCities();
+        } catch (e) {
+            console.log(e);
+        }
     }
-    res.json(ans);
-});
 
-router.get('/bike/', async function(req, res) {
-    let ans;
-    try {
-        ans = await getBikes();
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/bike/:msg', async function(req, res) {
-    let msg = parseInt(req.params.msg);
-    let ans;
-
-    try {
-        ans = await getBike(msg);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/station/', async function(req, res) {
-    let ans;
-    try {
-        ans = await getStations();
-        console.log(ans);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/station/:msg', async function(req, res) {
-    let msg = parseInt(req.params.msg);
-    let ans;
-
-    try {
-        ans = await getStation(msg);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/parking/', async function(req, res) {
-    let ans;
-    try {
-        ans = await getParkings();
-        console.log(ans);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/parking/:msg', async function(req, res) {
-    let msg = parseInt(req.params.msg);
-    let ans;
-
-    try {
-        ans = await getParking(msg);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/log/', async function(req, res) {
-    let ans;
-    try {
-        ans = await getLogs();
-        console.log(ans);
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(ans);
-});
-
-router.get('/log/:msg', async function(req, res) {
-    let msg = parseInt(req.params.msg);
-    let ans;
-
-    try {
-        ans = await getLog(msg);
-    } catch (e) {
-        console.log(e);
-    }
     res.json(ans);
 });
 
 
-// router.get('/', function(req, res) {
-//     res.json(myMap.size);
-// });
+router.get('/', function(req, res) {
+    res.json(myMap.size);
+});
 
-// router.get("/all/", function(req, res) {
-//     // console.log(myMap);
-//     res.json(Object.fromEntries(myMap));
-// });
+router.get("/all/", function(req, res) {
+    // console.log(myMap);
+    res.json(Object.fromEntries(myMap));
+});
 
-// //returns bike object with given bikeId
-// router.get('/:msg', function(req, res) {
-//     let cykel = parseInt(req.params.msg);
-//     let cykelinfo = myMap.get(cykel);
+//returns bike object with given bikeId
+router.get('/:msg', function(req, res) {
+    let cykel = parseInt(req.params.msg);
+    let cykelinfo = myMap.get(cykel);
 
-//     res.json(cykelinfo.info);
-// });
+    res.json(cykelinfo.info);
+});
 
 // creates a bike using this body -> x-www-form-urlencoded format:
 //
@@ -273,7 +181,7 @@ router.post('/create/', (req, res) => { //:msg
 // userId: 2
 // destination: [75,50]
 //
-//
+// 
 
 
 router.post('/rent/', (req, res) => { //:msg
@@ -352,7 +260,7 @@ class Cykel {
         for (const row of parking) {
             let position = this.position;
             let spot = row.position.split(" ");
-
+            
             position = { lat: position[0], lng: position[0] };
             spot = { lat: spot[0], lng: spot[1] };
 
@@ -360,7 +268,7 @@ class Cykel {
                 return "parked";
             }
         }
-        return "free";
+        return "free";        
     }
 
     decideDestination(position) {
@@ -379,7 +287,7 @@ class Cykel {
         let delta_time = parseInt(Math.abs(end_time.getTime() - start_time.getTime()) / (1000));
         let per_sec = 0.08333;
         let start_fee;
-
+                
         if (this.state == "parked") {
             start_fee = 5;
         } else if (this.state == "free") {
@@ -400,12 +308,12 @@ class Cykel {
         let diffLat = this.position[0] - destination[0];
         let diffLong = this.position[1] - destination[1];
         let diffArr = [ diffLat, diffLong ];
-
+        
         let increment = [
             diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
             diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
         ];
-
+        
         this.orgPos = this.position.map(x => Math.round(x * 100000) / 100000);
         io.emit(`bikestart ${this.cityName}`, this);
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
@@ -435,7 +343,7 @@ class Cykel {
             let bike = this;
 
             let intervalId = setInterval(() => {
-
+            
                 if (callCount > count || bike.battery <= 5) {
                     clearInterval(intervalId);
                     resolve();
