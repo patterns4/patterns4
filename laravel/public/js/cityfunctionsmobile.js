@@ -31,6 +31,20 @@ function hireBike(bike_id) {
     searchBike(bike_id.toString());
 }
 
+function stopBike(bike_id) {
+    let hireData = {
+        "bikeId": bike_id.toString(),
+        "userId": user
+    };
+    fetch("http://127.0.0.1:1337/cykel/stop", {
+        method: 'POST',
+        body: new URLSearchParams(hireData)
+    })
+
+    plotBikes("free");
+    plotBikes("parked");
+}
+
 function plotFreeBikes() {
     trackFreeBikes = true;
     plotBikes("free");
