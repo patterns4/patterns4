@@ -1,10 +1,10 @@
 # patterns4
 
 ## build and start ##
-    ```docker-compose up```
+    docker-compose up
 
 ## stop ##
-    ```docker-compose down```  
+    docker-compose down  
 
 
 # REST API Documentation
