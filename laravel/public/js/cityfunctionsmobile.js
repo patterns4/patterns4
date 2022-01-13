@@ -33,8 +33,7 @@ function hireBike(bike_id) {
 
 function stopBike(bike_id) {
     let hireData = {
-        "bikeId": bike_id.toString(),
-        "userId": user
+        "bikeId": bike_id.toString()
     };
     fetch("http://127.0.0.1:1337/cykel/stop", {
         method: 'POST',
@@ -97,6 +96,7 @@ function searchBike(searchId) {
                 bikeLayer.addLayer(marker);
                 row[1].removed = false;
             }
+            console.log(row[1]);
             continue;
         }
         let marker = bikeMarkers[row[1].bikeId];

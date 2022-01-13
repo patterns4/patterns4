@@ -139,4 +139,36 @@ router.post('/rent/', (req, res) => { //:msg
     }
 });
 
+router.post('/stop/', (req, res) => { //:msg
+    let bikeId = parseInt(req.body.bikeId);
+    let bike = myMap.get(bikeId);
+    let datad = {};
+
+    if (bike) {
+        datad = {
+            bike: bike,
+        };
+    } else {
+        return "bike not found";
+    }
+
+    try {
+        let result = bike.stop(datad);
+
+        if (result) {
+            // logIdCounter++;
+            return res.json(datad);
+        }
+    } catch (e) {
+        return res.status(500).json({
+            errors: {
+                status: 500,
+                source: "/",
+                title: "Dictionary error",
+                detail: e.message
+            }
+        });
+    }
+});
+
 export default router;

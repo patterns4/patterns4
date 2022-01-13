@@ -153,6 +153,22 @@ class Cykel {
         return data;
     }
 
+    // called by the stop route, provides input for the travel function
+    async stop(data) {
+        this.moving = false;
+        this.state = this.checkState(this.parking);
+        this.position = this.position.map(x => Math.round(x * 100000) / 100000);
+        this.calcCostAndLog();
+        updateBike(this.position, this.battery, this.state, this.bikeId);
+
+        console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state} at position:`);
+        console.log(this.position);
+
+        io.emit(`bikestop ${this.cityName}`, this);
+
+        return data;
+    }
+
     async toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid) {
         try {
             await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost, paid);
