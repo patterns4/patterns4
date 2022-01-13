@@ -37,10 +37,10 @@ class SocialController extends Controller
                     'first_name' => $user->name,
                     'last_name' => '',
                     'email' => $user->email,
-                    'phone' => 0,
-                    'birth_year' => 1900,
+                    'phone' => 0 . rand(463400000, 463699999),
+                    'birth_year' => rand(1945, 2003),
                     'payment' => 'Invoice',
-                    'saldo' => 100,
+                    'saldo' => rand(400,4000),
                     'github_id'=> $user->id,
                     'password' => encrypt('@S3CR£T@')
                 ]);
@@ -75,11 +75,11 @@ class SocialController extends Controller
                     'first_name' => $user->name,
                     'last_name' => '',
                     'email' => $user->email,
-                    'phone' => 0,
-                    'birth_year' => 1900,
+                    'phone' => 0 . rand(463400000, 463699999),
+                    'birth_year' => rand(1945, 2003),
                     'payment' => 'Invoice',
-                    'saldo' => 100,
-                    'fb_id' => $user->id,
+                    'saldo' => rand(400,4000),
+                    'fb_id'=> $user->id,
                     'password' => encrypt('@S3CR£T@')
                 ]);
     

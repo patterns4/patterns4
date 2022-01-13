@@ -6,25 +6,42 @@
                 <div class="main-flex items-center">
                     <div class="flex-col">
                         <p>
-                            Name: {{ Auth::user()->name }}
+                            Name: {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
                         </p>
                         <p>
                             Email: {{ Auth::user()->email }}
                         </p>
+                        <p>
+                            Number: {{ Auth::user()->phone }}
+                        </p>
+                        <p>
+                            Birth year: {{ Auth::user()->birth_year }}
+                        </p>
+                        <p>
+                            Saldo: {{ Auth::user()->saldo }}
+                        </p>
                     </div>
                    
-                    <h1 class="py-3 text-xl font-semibold">Payment method</h1>
                     <div>
+                        <h1 class="py-3 text-xl font-semibold">Payment method</h1>
                         <div class="flex gap-3">
                             <div>
                                 <label class="labl">
-                                    <input type="radio" name="payment_method" value="prepaid" checked="checked"/>
+                                    @if (Auth::user()->payment === "Invoice")
+                                    <input type="radio" name="payment_method" value="prepaid" checked/>
+                                    @else
+                                    <input type="radio" name="payment_method" value="prepaid"/>
+                                    @endif
                                     <div>Prepaid</div>
                                 </label>
                             </div>
                             <div>
                                 <label class="labl">
+                                    @if (Auth::user()->payment === "Monthly")
+                                    <input type="radio" name="payment_method" value="monthly" checked/>
+                                    @else
                                     <input type="radio" name="payment_method" value="monthly"/>
+                                    @endif
                                     <div>Monthly</div>
                                 </label>
                             </div>
