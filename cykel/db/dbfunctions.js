@@ -15,14 +15,65 @@ async function connect () {
     process.on("exit", () => {
         db.end();
     });
-};
-
-async function getBikes () {
-    let sql = `SELECT * FROM bike;`;
-    bikes = await db.query(sql);
-
-    return bikes;
 }
+
+async function getCities() {
+    let sql = `SELECT * FROM city`;
+    return await db.query(sql);
+}
+
+async function getCity(city) {
+    let sql = `SELECT * FROM city WHERE city_id = ` + city + ';';
+    return await db.query(sql);
+}
+
+async function getBikes() {
+    let sql = `SELECT * FROM bike;`;
+    return await db.query(sql);
+}
+
+async function getBike(bike) {
+    let sql = `SELECT * FROM bike WHERE bike_id = ` + bike + ';';
+    return await db.query(sql);
+}
+
+async function getStations() {
+    let sql = `SELECT * FROM station;`;
+    return await db.query(sql);
+}
+
+async function getStation(station) {
+    let sql = `SELECT * FROM station WHERE station_id = ` + station + ';';
+    return await db.query(sql);
+}
+
+async function getParkings() {
+    let sql = `SELECT * FROM parking;`;
+    return await db.query(sql);
+}
+
+async function getParking(parking) {
+    let sql = `SELECT * FROM parking WHERE parking_id = ` + parking + ';';
+    return await db.query(sql);
+}
+
+async function getLogs() {
+    let sql = `SELECT * FROM log;`;
+    return await db.query(sql);
+}
+
+async function getLog(log) {
+    let sql = `SELECT * FROM log WHERE log_id = ` + log + ';';
+    return await db.query(sql);
+}
+
+
+// async function getBikes () {
+//     let sql = `SELECT * FROM bike;`;
+//     bikes = await db.query(sql);
+
+//     return bikes;
+// }
 
 async function seedBikes (position, n, city) {
     let bike_id = n;
@@ -83,10 +134,10 @@ async function bikesToCities() {
     console.log("Cyklar klara");
 }
 
-async function getCities() {
-    let sql = "SELECT * FROM city";
-    return await db.query(sql);
-}
+// async function getCities() {
+//     let sql = "SELECT * FROM city";
+//     return await db.query(sql);
+// }
 
 async function decideStatus(cityName) {
     let sql = "SELECT * FROM parking WHERE city_name = ?";
@@ -96,19 +147,27 @@ async function decideStatus(cityName) {
     return res;
 }
 
-async function getParking() {
-    let sql = "SELECT * FROM parking";
-    return await db.query(sql);
-}
+// async function getParking() {
+//     let sql = "SELECT * FROM parking";
+//     return await db.query(sql);
+// }
 
 export {
+    getCities,
+    getCity,
     getBikes,
+    getBike,
+    getStations,
+    getStation,
+    getParkings,
+    getParking,
+    getLogs,
+    getLog,
+
     connect,
     seedBikes,
     bikesToCities,
-    getCities,
     decideStatus,
-    getParking,
     logTrip,
     updateBike
 }

@@ -1,6 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { getParking } from './db/dbfunctions.js';
+import { getParkings } from './db/dbfunctions.js';
 import { myMap } from './app.js';
 
 const io = {
@@ -18,7 +18,7 @@ const io = {
 
         // return io;
         io.on('connection', async () => {
-            let parking = await getParking();
+            let parking = await getParkings();
             // console.log(parking);
             for (const row of myMap) {
                 // console.log(row[1].checkState());

@@ -4,7 +4,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import * as router from './routes/cykel.js';
-import { connect, getBikes, getParking } from "./db/dbfunctions.js";
+import * as router2 from './routes/v1.js';
+import { connect, getBikes, getParkings } from "./db/dbfunctions.js";
 import io from './socket.js';
 import Cykel from './bikeclass.js';
 
@@ -29,7 +30,10 @@ app.use((req, res, next) => {
     next();
 });
 
+// cykel-backend
 app.use('/cykel', router.default); // /:msg
+// rest api
+app.use('/v1', router2.default); // /:msg
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
@@ -60,7 +64,7 @@ app.use((err, req, res, next) => {
     try {
         await connect();
         let bikes = await getBikes();
-        let parking = await getParking();
+        let parking = await getParkings();
     
         for (const row of bikes) {
             let bike = new Cykel(row, parking);
