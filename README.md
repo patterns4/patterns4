@@ -53,74 +53,227 @@ Result:
         }
     ]
 
-## Cities
-A city has the following attributes:
-> city_id
+## Bikes
+A bike has the following attributes:
+> bike_id
+>
+> position
+> 
+> speed
+>
+> battery
+> 
+> status
+> 
+> state
 > 
 > city_name
-> 
-> position
 
 ### GET all bikes
 ```v1/bike/```
 
 Result:
 
+    [
+        {
+            "bike_id": 1,
+            "position": "59.33317 18.0711",
+            "speed": 0,
+            "battery": 100,
+            "status": 0,
+            "state": "free",
+            "city_name": "Stockholm Central"
+        },
+        {
+            "bike_id": 2,
+            "position": "59.32792 18.06265",
+            "speed": 0,
+            "battery": 8,
+            "status": 0,
+            "state": "free",
+            "city_name": "Stockholm Central"
+        },
+        ...
+    ]
+
 ### GET a specific bike
 ```v1/bike/12```
 
 Result:
 
-## Cities
-A city has the following attributes:
-> city_id
+    [
+        {
+            "bike_id": 12,
+            "position": "59.33157 18.06499",
+            "speed": 0,
+            "battery": 100,
+            "status": 0,
+            "state": "free",
+            "city_name": "Stockholm Central"
+        }
+    ]
+
+## Charging stations
+A charging station has the following attributes:
+> station_id
 > 
-> city_name
+> station_name
 > 
 > position
+> 
+> city_name
 
 ### GET all charging stations
 ```v1/station/```
 
 Result:
 
+    [
+        {
+            "station_id": 1,
+            "station_name": "Bert Wenglers gata 3",
+            "position": "59.3289 18.0665",
+            "city_name": "Stockholm Central"
+        },
+        {
+            "station_id": 2,
+            "station_name": "Kungsgatan 21",
+            "position": "59.4289 18.8665",
+            "city_name": "Stockholm Central"
+        },
+        ...
+    ]
+
 ### GET a specific charging station
 ```v1/station/1```
 
 Result:
 
-## Cities
-A city has the following attributes:
-> city_id
+    [
+        {
+            "station_id": 1,
+            "station_name": "Bert Wenglers gata 3",
+            "position": "59.3289 18.0665",
+            "city_name": "Stockholm Central"
+        },
+    ]
+
+## Parking spots
+A parking spot the following attributes:
+> parking_id
 > 
-> city_name
+> parking_name
 > 
 > position
+> 
+> city_name
 
 ### GET all parking spots
 ```v1/parking/```
 
 Result:
 
+    [
+        {
+            "station_id": 1,
+            "station_name": "Bert Wenglers gata 3",
+            "position": "59.3289 18.0665",
+            "city_name": "Stockholm Central"
+        },
+        {
+            "station_id": 2,
+            "station_name": "Kungsgatan 21",
+            "position": "59.4289 18.8665",
+            "city_name": "Stockholm Central"
+        },
+        ...
+    ]
+
 ### GET a specific parking spot
 ```v1/parking/1```
 
 Result:
 
-## Cities
-A city has the following attributes:
-> city_id
+    [
+        {
+            "station_id": 1,
+            "station_name": "Bert Wenglers gata 3",
+            "position": "59.3289 18.0665",
+            "city_name": "Stockholm Central"
+        },
+    ]
+
+## Logs
+A log has the following attributes:
+> log_id
+>
+> start_time
 > 
-> city_name
+> start_point
 > 
-> position
+> end_time
+> 
+> travel_time
+> 
+> end_point
+> 
+> user_id
+> 
+> bike_id
+> 
+> cost
+> 
+> paid
 
 ### GET all logs
 ```v1/log/```
 
 Result:
 
+    [
+        {
+            "log_id": 1,
+            "start_time": "2022-01-13T12:18:20.000Z",
+            "start_point": "59.32679 18.06712",
+            "end_time": "2022-01-13T12:18:40.000Z",
+            "travel_time": 20,
+            "end_point": "59.32659 18.06607",
+            "user_id": 111,
+            "bike_id": 111,
+            "cost": 11.6666,
+            "paid": 0
+        },
+        {
+            "log_id": 2,
+            "start_time": "2022-01-13T12:17:36.000Z",
+            "start_point": "59.3337 18.07337",
+            "end_time": "2022-01-13T12:19:07.000Z",
+            "travel_time": 90,
+            "end_point": "59.33315 18.0676",
+            "user_id": 25,
+            "bike_id": 25,
+            "cost": 17.4997,
+            "paid": 0
+        },
+        ...
+    ]
+
 ### GET a specific log
 ```v1/log/1```
 
 Result:
+
+    [
+        {
+            "log_id": 1,
+            "start_time": "2022-01-13T12:18:20.000Z",
+            "start_point": "59.32679 18.06712",
+            "end_time": "2022-01-13T12:18:40.000Z",
+            "travel_time": 20,
+            "end_point": "59.32659 18.06607",
+            "user_id": 111,
+            "bike_id": 111,
+            "cost": 11.6666,
+            "paid": 0
+        }
+    ]
