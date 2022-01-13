@@ -17,6 +17,8 @@ const app = express();
 const myMap = new Map();
 const socket = io.init();
 
+export let parking;
+
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
     // use morgan to log at command line
@@ -67,10 +69,10 @@ app.use((err, req, res, next) => {
     try {
         await connect();
         let bikes = await getBikes();
-        let parking = await getParkings();
+        parking = await getParkings();
     
         for (const row of bikes) {
-            let bike = new Cykel(row, parking);
+            let bike = new Cykel(row);
             myMap.set(bike.bikeId, bike);
         }
     } catch (e) {

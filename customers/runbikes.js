@@ -1,9 +1,11 @@
+/** global: URLSearchParams */
+
 import fetch from 'node-fetch';
 
 let intcount = 0;
 
 console.log();
-console.log("Start renting bikes in 5 second");
+console.log("Start renting bikes in 3 seconds");
 console.log();
 
 setTimeout(startBikes, 2000);
@@ -25,8 +27,6 @@ function startBikes() {
                 method: 'POST',
                 body: new URLSearchParams(data)
             })
-                // .then(res => res.json())
-                // .then(json => console.log(json));
         }
     }, 500);
 }

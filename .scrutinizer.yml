@@ -1,0 +1,23 @@
+imports:
+    - php
+filter:
+    excluded_paths: [vendor/*, test/*, build/*, database/*, public/js/app.js, models/User.php, cykel/coverage]
+
+build:
+    environment:
+            node: v15.14.0
+    project_setup:
+            override:
+                - true
+    nodes:
+        my-tests:
+            environment:
+                php:
+                    version: 8.0
+    tests:
+        override:
+            -
+                command: "mocha"
+                # coverage:
+                #     file: "build/coverage.clover"
+                #     format: "php-clover"
