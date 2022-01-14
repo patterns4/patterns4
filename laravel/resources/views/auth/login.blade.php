@@ -15,19 +15,20 @@
             {{ session('status') }}
         </div>
         @endif
-
+        
+        <div class="w-1/3 mx-auto h-full">
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <div>
                 <x-jet-label value="{{ __('Email') }}" />
-                <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+                <x-jet-input class="border block mt-1 w-full" type="email" name="email" :value="old('email')" required
                     autofocus />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('Password') }}" />
-                <x-jet-input class="block mt-1 w-full" type="password" name="password" required
+                <x-jet-input class="border block mt-1 w-full" type="password" name="password" required
                     autocomplete="current-password" />
             </div>
 
@@ -63,5 +64,6 @@
                 </a>
             </div>
         </form>
+        </div>
     </x-jet-authentication-card>
 </x-guest-layout>
