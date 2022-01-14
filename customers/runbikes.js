@@ -12,7 +12,7 @@ setTimeout(startBikes, 5000);
 
 function startBikes() {
     let interval = setInterval(() => {
-        if (intcount >= 5000) {
+        if (intcount >= 1000) {
             clearInterval(interval);
             return;
         }

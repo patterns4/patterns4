@@ -82,7 +82,7 @@ function prepBikes() {
             radius: 6,
             zIndexOffset: 1,
             color: circleColor
-        })
+        });
         let popup = L.popup().setContent(`ID: ${row[1].bikeId}<br>
             Battery: ${row[1].battery}<br>
             Status: ${row[1].status}<br>
@@ -92,7 +92,9 @@ function prepBikes() {
 
         bikePopups[row[1].bikeId] = popup;
         marker.bindPopup(popup);
-        bikeMarkers[row[1].bikeId] = marker;
+        if (row[1].state !== "moving") {
+            bikeMarkers[row[1].bikeId] = marker;
+        }
         row[1].removed = true;
     }
 }

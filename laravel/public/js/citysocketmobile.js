@@ -19,22 +19,12 @@ socket.on(`bikestart ${city.city_name}`, bike => {
 
     bikeData[bike.bikeId].state = "moving";
     marker.setStyle({ color: "#9B59B6" });
-        // if (trackMovingBikes && bikeData[bike.bikeId].removed) {
-            bikeLayer.addLayer(marker);
-            bikeData[bike.bikeId].removed = false;
-            return;
-        // }
-        
-        // if (! trackMovingBikes && ! bikeData[bike.bikeId].removed) {
-        //     bikeLayer.removeLayer(marker);
-        //     bikeData[bike.bikeId].removed = true;
-        //     return;
-        // }
+    bikeLayer.addLayer(marker);
+    bikeData[bike.bikeId].removed = false;
+    return;
 });
 
 socket.on(`bikestop ${city.city_name}`, bike => {
-    let marker = bikeMarkers[bike.bikeId];
-    console.log("HEJ")
     let circleColor = bike.state === "depleted" ? "#E74C3C" : "#3388ff";
     bikeData[bike.bikeId].state = bike.state;
     bikeMarkers[bike.bikeId].setStyle({ color: circleColor });
@@ -44,15 +34,6 @@ socket.on(`bikestop ${city.city_name}`, bike => {
             Position: ${bike.position}<br>
             State: ${bike.state}<br>
             <button class="button" type="button" onclick="hireBike(${bike.bikeId})">Hire</button>`);
-            
-    // if (bike.state === "free" && trackFreeBikes === false) {
-    //     bikeLayer.removeLayer(marker);
-    //     bikeData[bike.bikeId].removed = true;
-    // }
-    // if (bike.state === "depleted" && trackDepletedBikes === false) {
-    //     bikeLayer.removeLayer(marker);
-    //     bikeData[bike.bikeId].removed = true;
-    // }
 });
 
 socket.on(city.city_name, data => {
