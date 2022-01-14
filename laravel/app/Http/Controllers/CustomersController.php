@@ -54,4 +54,11 @@ class CustomersController extends Controller
         $customer->updatecustomer();
         return redirect('/mobile/settings');
     }
+
+    public function addsaldo()
+    {
+        $customer = new User();
+        $customer->addsaldo();
+        return redirect('/mobile/settings');
+    }
 }

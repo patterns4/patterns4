@@ -1,7 +1,13 @@
 const colors = require('./node_modules/tailwindcss/colors');
 
 module.exports = {
-  purge: [ "./resources/views/*.blade.php" ],
+  purge:
+        [
+            "./resources/views/*.blade.php",
+            "./resources/views/auth/*.blade.php",
+            "./resources/views/layouts/*.blade.php",
+            "./resources/views/api/*.blade.php"
+        ],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},

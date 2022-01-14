@@ -66,4 +66,17 @@ class User extends Authenticatable
                 ]
             );
     }
+
+    public function addsaldo()
+    {
+        $customer = $this->select('saldo')->where("user_id", $_POST["user_id"])->get()->first();
+        $saldo = $customer->saldo;
+        $saldo += $_POST["add_saldo"];
+        $this->where('user_id', $_POST["user_id"])
+            ->update(
+                [
+                'saldo' => $saldo
+                ]
+            );
+    }
 }
