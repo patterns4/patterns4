@@ -23,8 +23,10 @@ const io = {
                 row[1].state = await row[1].checkState(parking);
             }
 
-            bikes.forEach(bike => { const clone = Object.assign({}, bike);
+            bikes.forEach(bike => { 
+                const clone = Object.assign({}, bike);
                                     delete clone.io;
+                                    // delete clone.interval;
                                     mapClone.set(bike.bikeId, clone);
             });
 

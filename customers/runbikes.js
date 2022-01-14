@@ -5,10 +5,10 @@ import fetch from 'node-fetch';
 let intcount = 0;
 
 console.log();
-console.log("Start renting bikes in 3 seconds");
+console.log("Start renting bikes in 5 seconds");
 console.log();
 
-setTimeout(startBikes, 2000);
+setTimeout(startBikes, 5000);
 
 function startBikes() {
     let interval = setInterval(() => {

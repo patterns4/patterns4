@@ -128,6 +128,7 @@ router.post('/rent/', (req, res) => { //:msg
 router.post('/stop/', (req, res) => { //:msg
     let bikeId = parseInt(req.body.bikeId);
     let bike = myMap.get(bikeId);
+    bike.moving = false;
     let datad = {};
 
     if (bike) {

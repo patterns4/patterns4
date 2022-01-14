@@ -1,5 +1,5 @@
 class Cykel {
-    constructor(data, haversine, parking, updateBike, logTrip, io) {
+    constructor(data, haversine, parking, updateBike, logTrip, io, deepClone) {
         this.parking = parking;
         this.updateBike = updateBike;
         this.logTrip = logTrip;
@@ -22,6 +22,11 @@ class Cykel {
     // Getter
     get info() {
         return this;
+    }
+
+    cloneThis() {
+        this.clone = this.deepClone(this);
+        delete this.clone.io;
     }
 
     // formats datetime a bit
@@ -117,18 +122,16 @@ class Cykel {
             let count = Math.round(diff / Math.abs(increment));
             let callCount = 0;
 
-            this.interval = setInterval(() => {
+            let interval = setInterval(() => {
             
-                if (callCount > count || this.battery <= 5) {
-                    clearInterval(this.interval);
+                if (callCount > count || this.battery <= 5 || this.moving === false) {
+                    clearInterval(interval);
                     resolve();
                     return;
                 }
                 this.clone.position[ind] += increment;
                 this.clone.battery -= this.batteryDepletion;
                 this.clone.battery = parseFloat(this.clone.battery.toFixed(1));
-                // const bike = Object.assign({}, this);
-                // delete bike.io;
                 this.io.emit(cityName, JSON.stringify(this.clone));
                 callCount += 1;
 
@@ -142,6 +145,7 @@ class Cykel {
         let datetime = data.datetime;
         this.rentedBy = userId;
         this.clone.moving = true;
+        this.moving = true;
         this.clone.state = "moving";
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);

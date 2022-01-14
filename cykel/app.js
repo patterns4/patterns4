@@ -18,6 +18,21 @@ const socket = io.init(myMap, getParkings);
 
 let parking;
 
+(async () => {
+    try {
+        await connect();
+        let bikes = await getBikes();
+        parking = await getParkings();
+
+        for (const row of bikes) {
+            let bike = new Cykel(row, haversine, parking, updateBike, logTrip, socket);
+            myMap.set(bike.bikeId, bike);
+        };
+    } catch (e) {
+        console.log(e);
+    }
+})();
+
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
     // use morgan to log at command line
@@ -64,21 +79,21 @@ app.use((err, req, res, next) => {
     });
 });
 
-(async () => {
-    try {
-        await connect();
-        let bikes = await getBikes();
-        parking = await getParkings();
+// (async () => {
+//     try {
+//         await connect();
+//         let bikes = await getBikes();
+//         parking = await getParkings();
 
-        for (const row of bikes) {
-            let bike = new Cykel(row, haversine, parking, updateBike, logTrip, socket);
-            delete bike.socket;
-            myMap.set(bike.bikeId, bike);
-        }
-    } catch (e) {
-        console.log(e);
-    }
-})();
+//         for (const row of bikes) {
+//             let bike = new Cykel(row, haversine, parking, updateBike, logTrip, socket);
+//             delete bike.socket;
+//             myMap.set(bike.bikeId, bike);
+//         }
+//     } catch (e) {
+//         console.log(e);
+//     }
+// })();
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
