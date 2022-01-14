@@ -14,45 +14,39 @@ use App\Http\Controllers\{CitiesController, CustomersController, BikesController
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('/admin', function() {
-    return view('admin');
-});
-
-// Admin web interface
-Route::get('/cities', [CitiesController::class, 'show']);
-Route::get('/cities/{id}', [CitiesController::class, 'citymap']);
-Route::post('/cities/addparking', [CitiesController::class, 'addparking']);
-Route::post('/cities/deleteparking', [CitiesController::class, 'deleteparking']);
-
-Route::get('/bikes', [BikesController::class, 'show']);
-Route::get('/customers', [CustomersController::class, 'show']);
-Route::get('/customers/{id}', [CustomersController::class, 'customerdetails']);
-
-Route::post('/customers/customer/save', [CustomersController::class, 'updatecustomer']);
-Route::post('/customers/customer/delete', [CustomersController::class, 'deletecustomer']);
-Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
-Route::post('/parking/{id}', [ CitiesController::class, 'parkingdetails']);
-
-Route::get('/logs', [LogsController::class, 'show']);
-
 // Customer web interface
-Route::get('/mobile', function () {
+Route::get('/', function () {
     return view('auth/login');
 });
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire', [CitiesController::class, 'showMobile'])->name('hire');
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/hire/{id}', [CitiesController::class, 'citymapMobile'])->name('hire-city');
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/history', [LogsController::class, 'showMobile'])->name('history');
-Route::middleware(['auth:sanctum', 'verified'])->get('/mobile/settings', function () {
+Route::middleware(['auth:sanctum', 'verified'])->get('/hire', [CitiesController::class, 'showMobile'])->name('hire');
+Route::middleware(['auth:sanctum', 'verified'])->get('/hire/{id}', [CitiesController::class, 'citymapMobile'])->name('hire-city');
+Route::middleware(['auth:sanctum', 'verified'])->get('/history', [LogsController::class, 'showMobile'])->name('history');
+Route::middleware(['auth:sanctum', 'verified'])->get('/settings', function () {
     return view('settings');
 })->name('settings');
-Route::post('mobile/settings/update', [CustomersController::class, 'updatepayment']);
-Route::post('mobile/settings/saldo', [CustomersController::class, 'addsaldo']);
-Route::post('mobile/history/pay/{id}', [LogsController::class, 'pay']);
+Route::post('settings/update', [CustomersController::class, 'updatepayment']);
+Route::post('settings/saldo', [CustomersController::class, 'addsaldo']);
+Route::post('history/pay/{id}', [LogsController::class, 'pay']);
 
+// Admin web interface
+Route::get('admin/', function () {
+    return view('index');
+});
+Route::get('admin/cities', [CitiesController::class, 'show']);
+Route::get('admin/cities/{id}', [CitiesController::class, 'citymap']);
+Route::post('admin/cities/addparking', [CitiesController::class, 'addparking']);
+Route::post('admin/cities/deleteparking', [CitiesController::class, 'deleteparking']);
+
+Route::get('admin/bikes', [BikesController::class, 'show']);
+Route::get('admin/customers', [CustomersController::class, 'show']);
+Route::get('admin/customers/{id}', [CustomersController::class, 'customerdetails']);
+
+Route::post('admin/customers/customer/save', [CustomersController::class, 'updatecustomer']);
+Route::post('admin/customers/customer/delete', [CustomersController::class, 'deletecustomer']);
+Route::post('admin/parking/{id}', [ CitiesController::class, 'parkingdetails']);
+Route::post('admin/parking/{id}', [ CitiesController::class, 'parkingdetails']);
+
+Route::get('admin/logs', [LogsController::class, 'show']);
 
 
 // OAuth routing

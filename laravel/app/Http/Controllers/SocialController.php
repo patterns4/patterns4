@@ -30,7 +30,7 @@ class SocialController extends Controller
       
                 Auth::login($searchUser);
      
-                return redirect('mobile/hire');
+                return redirect('/hire');
       
             }else{
                 $gitUser = User::create([
@@ -47,7 +47,7 @@ class SocialController extends Controller
      
                 Auth::login($gitUser);
       
-                return redirect('mobile/hire');
+                return redirect('/hire');
             }
      
         } catch (Exception $e) {
@@ -69,7 +69,7 @@ class SocialController extends Controller
      
             if($isUser){
                 Auth::login($isUser);
-                return redirect('mobile/hire');
+                return redirect('/hire');
             }else{
                 $createUser = User::create([
                     'first_name' => $user->name,
@@ -84,7 +84,7 @@ class SocialController extends Controller
                 ]);
     
                 Auth::login($createUser);
-                return redirect('mobile/hire');
+                return redirect('/hire');
             }
     
         } catch (Exception $exception) {

@@ -22,13 +22,13 @@
 <body>
     <header>
         <nav>
-            <a href={{ url("/") }} class="{{ request()->path() == "/" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-home"></span></a>
-            {{-- <a href={{ url("/register") }} class={{ request()->path() == "register" ? 'active' : '' }}>Register</a> --}}
-            {{-- <a href={{ url("/login") }} class={{ request()->path() == "cities" ? 'active' : '' }}><span class="fas fa-sign-in-alt"></span>Login</a> --}}
-            <a href={{ url("/cities") }} class="{{ request()->path() == "cities" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-city"></span></a>
-            <a href={{ url("/customers") }} class="{{ request()->path() == "customers" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-users"></span></a>
-            <a href={{ url("/bikes") }} class="{{ request()->path() == "bikes" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-bicycle"></span></a>
-            <a href={{ url("/logs") }} class="{{ request()->path() == "logs" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-clipboard-list"></span></a>
+            <a href={{ url("admin/") }} class="{{ request()->path() == "admin/" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-home"></span></a>
+            {{-- <a href={{ url("admin/register") }} class={{ request()->path() == "register" ? 'active' : '' }}>Register</a> --}}
+            {{-- <a href={{ url("admin/login") }} class={{ request()->path() == "cities" ? 'active' : '' }}><span class="fas fa-sign-in-alt"></span>Login</a> --}}
+            <a href={{ url("admin/cities") }} class="{{ request()->path() == "cities" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-city"></span></a>
+            <a href={{ url("admin/customers") }} class="{{ request()->path() == "customers" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-users"></span></a>
+            <a href={{ url("admin/bikes") }} class="{{ request()->path() == "bikes" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-bicycle"></span></a>
+            <a href={{ url("admin/logs") }} class="{{ request()->path() == "logs" ? 'bg-sky-700' : 'bg-sky-500 hover:bg-sky-700' }}"><span class="fas fa-clipboard-list"></span></a>
         </nav>
     </header>
 <main>
