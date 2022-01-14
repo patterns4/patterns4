@@ -36,7 +36,7 @@ socket.on(`bikestop ${city.city_name}`, bike => {
     bikeData[bike.bikeId].state = bike.state;
     bikeMarkers[bike.bikeId].setStyle({ color: circleColor });
     bikePopups[bike.bikeId].setContent(`ID: ${bike.bikeId}<br>
-            Battery: ${bike.battery.toFixed(5)}<br>
+            Battery: ${bike.battery}<br>
             Status: ${bike.status}<br>
             Position: ${bike.position}<br>
             State: ${bike.state}`);

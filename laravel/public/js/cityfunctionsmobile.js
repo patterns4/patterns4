@@ -34,13 +34,14 @@ function prepParking() {
 
 function hireBike(bike_id) {
     let hireData = {
-        "bikeId": bike_id.toString(),
+        "bikeId": bike_id,
         "userId": user
     };
     fetch("http://127.0.0.1:1337/cykel/rent", {
         method: 'POST',
         body: new URLSearchParams(hireData)
-    })
+    });
+    hiredBike = bike_id;
 
     searchBike(bike_id.toString());
 }
@@ -98,6 +99,9 @@ function prepBikes() {
 
 function searchBike(searchId) {
     searchId = parseInt(searchId);
+    console.log(Object.entries(bikeData));
+    trackParkedBikes = false;
+    trackFreeBikes = false;
 
     for (const row of Object.entries(bikeData)) {
         if (row[1].bikeId === searchId) {
@@ -123,12 +127,12 @@ function plotParking() {
 function moveBike(bike) {
     let bikeId = bike.bikeId;
     let latlong = bike.position;
-    
+
     if (bike.state === "moving") {
         window.requestAnimationFrame(() => {
             bikeMarkers[bikeId].setLatLng(latlong);
             bikePopups[bikeId].setContent(`ID: ${bike.bikeId}<br>
-                Battery: ${bike.battery.toFixed(1)}<br>
+                Battery: ${bike.battery}<br>
                 Status: ${bike.status}<br>
                 Position: ${latlong[0].toFixed(5)} ${latlong[1].toFixed(5)}<br>
                 State: ${bike.state}<br>
