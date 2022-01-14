@@ -1,11 +1,9 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { getParkings } from './db/dbfunctions.js';
-import { myMap } from './app.js';
 
 const io = {
     httpServer: createServer(),
-    init: function() {
+    init: function(bikes, getParkings) {
 
         const io = new Server(this.httpServer, {
             path: '/',
@@ -17,13 +15,22 @@ const io = {
         });
 
         io.on('connection', async () => {
-            let parking = await getParkings();
-            for (const row of myMap) {
+            const parking = await getParkings();
+            const mapClone = new Map();
+
+            for (const row of bikes) {
+                row[1].parking = parking;
                 row[1].state = await row[1].checkState(parking);
             }
+
+            bikes.forEach(bike => { const clone = Object.assign({}, bike);
+                                    delete clone.io;
+                                    mapClone.set(bike.bikeId, clone);
+            });
+
             console.log('a user connected');
             io.emit("message", "you're connected");
-            io.emit("bikelocation", JSON.stringify(Object.fromEntries(myMap)));
+            io.emit("bikelocation", JSON.stringify(Object.fromEntries(mapClone)));
         });
         return io;
     }

@@ -1,6 +1,8 @@
 import chai from 'chai';
 import Cykel from '../bikeclass.js';
 import { connect, getParkings } from '../db/dbfunctions.js';
+import haversine from 'haversine';
+
 const assert = chai.assert;
 let parking;
 
@@ -9,25 +11,8 @@ let parking;
     parking = await getParkings();
 })();
 
-// describe('bikeCreate', () => {
-//     it('blabla', () => {
-
-//         let bike = new Cykel({
-//                                 bike_id: 1,
-//                                 position: "59.33317 18.0711",
-//                                 speed: 5.5,
-//                                 status: "OK",
-//                                 state: "free",
-//                                 battery: 100,
-//                                 city_name: "Stockholm Central",
-//         });
-//         // assert.property({ tea: { green: 'matcha' }}, 'tea');
-//         assert.equal(bike.bike_id, 1);
-//     }
-// });
-
 describe('Bike', function() {
-    let bike = new Cykel({
+    let data = {
         bike_id: 1,
         position: "59.33317 18.0711",
         speed: 5.5,
@@ -35,7 +20,9 @@ describe('Bike', function() {
         state: "free",
         battery: 100,
         city_name: "Stockholm Central",
-    });
+        }
+
+    let bike = new Cykel(data, haversine, parking);
     describe('#Cykel()', function() {
         it('should be a Cykel', function() {
             assert.instanceOf(bike, Cykel, "bike is a Cykel");
@@ -43,7 +30,15 @@ describe('Bike', function() {
     });
     describe('#checkState(parking)', () => {
         it('should be free', () => {
-            assert.equal(bike.checkState(parking), "free", "bike is free");
+            bike.state = bike.checkState(parking);
+            assert.equal(bike.state, "free", "bike is free");
         })
-    })
+    });
+    describe('#checkState(parking)', () => {
+        it ('should be parked', () => {
+            bike.position = [59.3499, 18.0714];
+            bike.state = bike.checkState(parking);
+            assert.equal(bike.state, "parked", "bike is parked");
+        })
+    });
 });

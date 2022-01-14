@@ -1,9 +1,9 @@
-import haversine from 'haversine';
-import { updateBike, logTrip } from './db/dbfunctions.js';
-import { socket as io, parking } from './app.js';
-
 class Cykel {
-    constructor(data) {
+    constructor(data, haversine, parking, updateBike, logTrip, io) {
+        this.parking = parking;
+        this.updateBike = updateBike;
+        this.logTrip = logTrip;
+        this.haversine = haversine;
         this.bikeId = data.bike_id;
         this.position = data.position.split(" ").map(x => parseFloat(x));
         this.speed = data.speed;
@@ -12,8 +12,9 @@ class Cykel {
         this.battery = data.battery;
         this.moving = false;
         this.cityName = data.city_name;
-        this.travelMultiplier = 0.01;
+        this.travelMultiplier = 0.001;
         this.batteryDepletion = 0.1;
+        this.io = io;
     }
 
     // Getter
@@ -42,9 +43,7 @@ class Cykel {
 
             position = {latitude: position[0], longitude: position[1]};
             spot = {latitude: spot[0], longitude: spot[1]};
-
-            if (haversine(spot, position, {unit: 'meter'}) <= 50) {
-                // console.log("japp")
+            if (this.haversine(spot, position, {unit: 'meter'}) <= 50) {
                 return "parked";
             }
         }
@@ -92,45 +91,52 @@ class Cykel {
             diffLat < 0 ? 0.0001 / 2 : -0.0001 / 2,
             diffLong < 0 ? 0.00015 / 2 : -0.00015 / 2,
         ];
-        
+
         this.orgPos = this.position.map(x => Math.round(x * 100000) / 100000);
-        io.emit(`bikestart ${this.cityName}`, this);
-        this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
+
+        const bike = Object.assign({}, this);
+        delete bike.io;
+        this.io.emit(`bikestart ${this.cityName}`, bike);
+        this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]), bike)
         .then(() => {
-        this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
+        this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]), bike)
             .then(() => {
                 this.moving = false;
-                this.state = this.checkState(parking);
-                this.position = this.position.map(x => Math.round(x * 100000) / 100000);
+                bike.moving = false;
+                bike.position = bike.position.map(x => Math.round(x * 100000) / 100000);
+                bike.state = this.checkState(this.parking);
+                this.position = bike.position;
+                this.battery = bike.battery;
+                this.state = bike.state;
                 this.calcCostAndLog();
-                updateBike(this.position, this.battery, this.state, this.bikeId);
+                this.updateBike(this.position, this.battery, this.state, this.bikeId);
 
-                console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state} at position:`);
+                console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state}, at position:`);
                 console.log(this.position);
 
-                io.emit(`bikestop ${this.cityName}`, this);
+                this.io.emit(`bikestop ${this.cityName}`, bike);
             });
         })
     }
 
-    travel(ind, cityName, increment, diff) {
+    travel(ind, cityName, increment, diff, bike) {
         return new Promise((resolve, reject) => {
-            let position = this.position;
             let count = Math.round(diff / Math.abs(increment));
             let callCount = 0;
-            let bike = this;
 
             let intervalId = setInterval(() => {
             
-                if (callCount > count || bike.battery <= 5) {
+                if (callCount > count || this.battery <= 5) {
                     clearInterval(intervalId);
                     resolve();
                     return;
                 }
-                this.position[ind] += increment;
-                this.battery -= this.batteryDepletion;
-                this.battery = parseFloat(this.battery.toFixed(1));
-                io.emit(cityName, JSON.stringify(this));
+                bike.position[ind] += increment;
+                bike.battery -= bike.batteryDepletion;
+                bike.battery = parseFloat(bike.battery.toFixed(1));
+                // const bike = Object.assign({}, this);
+                // delete bike.io;
+                this.io.emit(cityName, JSON.stringify(bike));
                 callCount += 1;
 
             }, 1000);
@@ -154,7 +160,7 @@ class Cykel {
 
     async toLog(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid) {
         try {
-            await logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost, paid);
+            await this.logTrip(start_time, start_point, end_time, travel_time,end_point, user_id, bike_id, cost, paid);
         } catch (e) {
             console.log(e);
         }

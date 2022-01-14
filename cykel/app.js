@@ -4,20 +4,20 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
-// const helmet = require('helmet');
-
 import * as router from './routes/cykel.js';
 import * as router2 from './routes/v1.js';
-import { connect, getBikes, getParkings } from "./db/dbfunctions.js";
+import { connect, getBikes, getParkings, updateBike, logTrip } from "./db/dbfunctions.js";
 import io from './socket.js';
 import Cykel from './bikeclass.js';
+import haversine from 'haversine';
 
 const port = process.env.PORT || 1337;
 const app = express();
 const myMap = new Map();
-const socket = io.init();
+export const mapClone = new Map();
+const socket = io.init(myMap, getParkings);
 
-export let parking;
+let parking;
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -70,9 +70,10 @@ app.use((err, req, res, next) => {
         await connect();
         let bikes = await getBikes();
         parking = await getParkings();
-    
+
         for (const row of bikes) {
-            let bike = new Cykel(row);
+            let bike = new Cykel(row, haversine, parking, updateBike, logTrip, socket);
+            delete bike.socket;
             myMap.set(bike.bikeId, bike);
         }
     } catch (e) {

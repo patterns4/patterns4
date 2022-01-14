@@ -14,10 +14,10 @@ build:
             environment:
                 php:
                     version: 8.0
-    tests:
-        override:
-            -
-                command: "mocha"
+    # tests:
+    #     override:
+    #         -
+    #             command: "mocha"
                 # coverage:
                 #     file: "build/coverage.clover"
                 #     format: "php-clover"

@@ -91,20 +91,9 @@ router.post('/create/', (req, res) => { //:msg
 //
 // bikeId: 1
 // userId: 2
-// destination: [75,50]
-//
-//
-// router.get('/reinit', async () => {
-//     parking = await getParking();
-//     for (const row of myMap) {
-        // row.state = checkState();
-//     }
-// })
-
 router.post('/rent/', (req, res) => { //:msg
     let bikeId = parseInt(req.body.bikeId);
     let bike = myMap.get(bikeId);
-    // let destination = JSON.parse(req.body.destination);
     let userId = parseInt(req.body.userId);
     let dt = new Date();
     let datac = {};
@@ -112,9 +101,8 @@ router.post('/rent/', (req, res) => { //:msg
     if (bike) {
         datac = {
             datetime: dt,
-            bikeId: bike,
+            bikeId: bike.bikeId,
             userId: userId,
-            // destination: destination
         };
     } else {
         return "bike not found";
@@ -122,9 +110,7 @@ router.post('/rent/', (req, res) => { //:msg
 
     try {
         let result = bike.rent(datac);
-
         if (result) {
-            // logIdCounter++;
             return res.json(datac);
         }
     } catch (e) {
