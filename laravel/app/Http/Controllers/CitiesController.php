@@ -57,4 +57,31 @@ class CitiesController extends Controller
 
         return view('hire-city', $data);
     }
+
+    public function addparking(Request $request)
+    {
+        $parking = new Parking();
+        $position = $request->parking_position;
+        $name = $request->parking_name;
+        $city_name = $request->city_name;
+        $id = $request->redirect_url;
+
+        $parking->position = $position;
+        $parking->parking_name = $name;
+        $parking->city_name = $city_name;
+
+        $parking->save();
+
+        return redirect("/cities/" . $id);
+    }
+
+    public function deleteparking(Request $request)
+    {
+        $parking = Parking::find($request->parking_id);
+        $city_id = $request->city_id;
+
+        $parking->delete();
+
+        return redirect("/cities/" . $city_id);
+    }
 }
