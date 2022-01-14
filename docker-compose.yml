@@ -24,7 +24,7 @@ services:
       - "1337:1337"
       - "5000:5000"
     depends_on:
-      mysql: 
+      mysql:
         condition: service_healthy
     restart: on-failure
     networks:
@@ -42,18 +42,18 @@ services:
     restart: on-failure
     networks:
       - app-network
-#   customers:
-#     build: ./customers
-#     depends_on:
-#       mysql:
-#         condition: service_healthy
-#       express: 
-#         condition: service_started
-#       laravel:
-#         condition: service_started
-#     restart: on-failure
-#     networks:
-#       - app-network
-# networks:
-#   app-network:
-#     driver: bridge
+  customers:
+    build: ./customers
+    depends_on:
+      mysql:
+        condition: service_healthy
+      express:
+        condition: service_started
+      laravel:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
