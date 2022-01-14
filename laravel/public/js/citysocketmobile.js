@@ -12,8 +12,6 @@ socket.once('bikelocation', data => {
     prepBikes();
     plotFreeBikes();
     plotParkedBikes();
-    plotBikes("free");
-    plotBikes("parked");
 });
 
 socket.on(`bikestart ${city.city_name}`, bike => {
