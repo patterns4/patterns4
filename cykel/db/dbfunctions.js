@@ -53,8 +53,8 @@ async function getParkings() {
 }
 
 async function getParking(parking) {
-    let sql = `SELECT * FROM parking WHERE parking_id = ` + parking + ';';
-    return await db.query(sql);
+    let sql = `SELECT * FROM parking WHERE parking_id = ?;`;
+    return await db.query(sql, [parking]);
 }
 
 async function getLogs() {
@@ -92,7 +92,7 @@ async function seedBikes (position, n, city) {
         const temp = res[0];
         const pos = temp.join(" ");
         const sql =  `INSERT INTO bike VALUES(?, ?, ?, ?, ?, ?, ?)`;
-
+        
         dec = res[1];
         await db.query(sql, [bike_id, pos, speed, battery, status, state, city]);
         bike_id += 1;
@@ -100,18 +100,18 @@ async function seedBikes (position, n, city) {
     return bike_id;
 }
 
-async function logTrip (start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid)  {
-    const sql = `INSERT INTO log(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+async function logTrip (start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost)  {
+    const sql = `INSERT INTO log(start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
     start_point = start_point.join(" ");
     end_point = end_point.join(" ");
-
-    await db.query(sql, [start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost, paid]);
+    
+    await db.query(sql, [start_time, start_point, end_time, travel_time, end_point, user_id, bike_id, cost]);
 }
 
 async function updateBike(position, battery, state, bikeId) {
     position = position.join(" ");
     let sql = `UPDATE bike  SET     position = ?,
-                                    battery  = ?,
+                                    battery  = ?, 
                                     state    = ?
                             WHERE   bike_id  = ?`;
     await db.query(sql, [position, battery, state, bikeId]);
