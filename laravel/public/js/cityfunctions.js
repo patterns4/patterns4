@@ -172,7 +172,7 @@ function moveBike(bike) {
     window.requestAnimationFrame(() => {
         bikeMarkers[bikeId].setLatLng(latlong);
         bikePopups[bikeId].setContent(`ID: ${bike.bikeId}<br>
-           Battery: ${bike.battery.toFixed(1)}<br>
+           Battery: ${bike.battery}<br>
            Status: ${bike.status}<br>
            Position: ${latlong[0].toFixed(5)} ${latlong[1].toFixed(5)}<br>
            State: ${bike.state}`);
