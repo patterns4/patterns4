@@ -24,14 +24,15 @@ const io = {
             }
 
             bikes.forEach(bike => { 
-                const clone = Object.assign({}, bike);
-                                    delete clone.io;
+                // const clone = Object.assign({}, bike);
+                                    // delete clone.io;
                                     // delete clone.interval;
-                                    mapClone.set(bike.bikeId, clone);
+                                    mapClone.set(bike.bikeId, bike.bikeData);
             });
 
             console.log('a user connected');
             io.emit("message", "you're connected");
+            // console.log(bikes)
             io.emit("bikelocation", JSON.stringify(Object.fromEntries(mapClone)));
         });
         return io;
