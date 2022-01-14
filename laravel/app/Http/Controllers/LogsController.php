@@ -32,7 +32,7 @@ class LogsController extends Controller
         $log->pay($id);
         $customer = new User();
         $customer->pay($id);
-        return redirect('/mobile/history');
+        return redirect('/history');
     }
 
 }

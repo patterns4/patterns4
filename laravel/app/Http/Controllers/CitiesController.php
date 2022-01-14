@@ -72,7 +72,7 @@ class CitiesController extends Controller
 
         $parking->save();
 
-        return redirect("/cities/" . $id);
+        return redirect("admin/cities/" . $id);
     }
 
     public function deleteparking(Request $request)
@@ -82,6 +82,6 @@ class CitiesController extends Controller
 
         $parking->delete();
 
-        return redirect("/cities/" . $city_id);
+        return redirect("admin/cities/" . $city_id);
     }
 }

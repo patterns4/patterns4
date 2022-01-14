@@ -38,27 +38,27 @@ class CustomersController extends Controller
     {
         $customer = new User();
         $customer->updatecustomer();
-        return redirect('/customers/' . $request->user_id);
+        return redirect('admin/customers/' . $request->user_id);
     }
 
     public function deletecustomer()
     {
         $customer = new User();
         $customer->deletecustomer();
-        return redirect('/customers');
+        return redirect('admin/customers');
     }
 
     public function updatepayment()
     {
         $customer = new User();
         $customer->updatecustomer();
-        return redirect('/mobile/settings');
+        return redirect('/settings');
     }
 
     public function addsaldo()
     {
         $customer = new User();
         $customer->addsaldo();
-        return redirect('/mobile/settings');
+        return redirect('/settings');
     }
 }

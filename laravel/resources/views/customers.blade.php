@@ -25,7 +25,7 @@
             <td> {{ $customer->phone }}</td>
             <td> {{ $customer->email }}</td>
             <td> {{ $customer->saldo }}</td>
-            <td> <a href="/customers/{{$customer->user_id }}"><i class="fas fa-edit"></i></a></td>
+            <td> <a href="customers/{{$customer->user_id }}"><i class="fas fa-edit"></i></a></td>
         </tr>
         @endforeach
     </table>
