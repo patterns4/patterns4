@@ -14,6 +14,7 @@ class Cykel {
         this.cityName = data.city_name;
         this.travelMultiplier = 0.01;
         this.batteryDepletion = 0.1;
+        this.parking = parking;
     }
 
     // Getter
@@ -36,6 +37,7 @@ class Cykel {
         if (this.battery < 10) {
             return "depleted";
         }
+
         for (const row of parking) {
             let position = this.position;
             let spot = row.position.split(" ");
@@ -44,7 +46,6 @@ class Cykel {
             spot = {latitude: spot[0], longitude: spot[1]};
 
             if (haversine(spot, position, {unit: 'meter'}) <= 50) {
-                // console.log("japp")
                 return "parked";
             }
         }
@@ -152,7 +153,7 @@ class Cykel {
         return data;
     }
 
-    // called by the stop route, provides input for the travel function
+    // called by the stop route, provides input for the stop function
     async stop(data) {
         this.moving = false;
         this.state = this.checkState(this.parking);

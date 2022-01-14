@@ -17,6 +17,7 @@
 
 const city = JSON.parse('<?= $city; ?>');
 const user = JSON.parse('<?= $user ?>');
+const parking = JSON.parse('<?= $parking ?>');
 
 let bikeData;
 let trackMovingBikes = false;
@@ -27,10 +28,16 @@ let trackParkedBikes = false;
 const bikeMarkers = {};
 const bikePopups = {};
 const bikeLayer = L.layerGroup();
+const parkingSpots = L.layerGroup();
 </script>
 
 <script src="{{asset('js/citymapmobile.js')}}"></script>
 <script src="{{asset('js/cityfunctionsmobile.js')}}"></script>
 <script src="{{asset('js/citysocketmobile.js')}}"></script>
+
+<script>
+    prepParking();
+    plotParking();
+</script>
 
 </x-app-layout>

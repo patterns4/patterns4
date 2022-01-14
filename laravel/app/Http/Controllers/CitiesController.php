@@ -52,6 +52,7 @@ class CitiesController extends Controller
         $data = [
                     "city" => json_encode($cityData),
                     "user" => Auth::user()->user_id,
+                    "parking" => json_encode($parkingData)
                 ];
 
         return view('hire-city', $data);

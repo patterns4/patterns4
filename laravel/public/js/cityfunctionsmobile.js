@@ -18,6 +18,20 @@ function hideBikes(state)  {
     }
 }
 
+function prepParking() {
+    parkingSpots.clearLayers();
+    for (const row of parking) {
+        let latlong = row.position.split(" ");
+        let spot = new L.circle(latlong, {
+            radius: 50,
+            color: "#1abc9c",
+            opacity: 0.4,
+            fillOpacity: 0.3,
+        });
+        parkingSpots.addLayer(spot);
+    }
+}
+
 function hireBike(bike_id) {
     let hireData = {
         "bikeId": bike_id.toString(),
@@ -96,13 +110,18 @@ function searchBike(searchId) {
                 bikeLayer.addLayer(marker);
                 row[1].removed = false;
             }
-            console.log(row[1]);
             continue;
         }
         let marker = bikeMarkers[row[1].bikeId];
         bikeLayer.removeLayer(marker);
         row[1].removed = true;
     }
+}
+
+function plotParking() {
+    map.removeLayer(bikeLayer);
+    map.addLayer(parkingSpots);
+    map.addLayer(bikeLayer);
 }
 
 function moveBike(bike) {

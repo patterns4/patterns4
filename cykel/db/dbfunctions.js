@@ -53,8 +53,8 @@ async function getParkings() {
 }
 
 async function getParking(parking) {
-    let sql = `SELECT * FROM parking WHERE parking_id = ?;`;
-    return await db.query(sql, [parking]);
+    let sql = `SELECT * FROM parking WHERE parking_id = ` + parking + ';';
+    return await db.query(sql);
 }
 
 async function getLogs() {
