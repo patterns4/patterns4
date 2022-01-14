@@ -118,7 +118,6 @@ class Cykel {
 
                 console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state}, at position:`);
                 console.log(this.position);
-                console.log(this.bikeData);
 
                 this.io.emit(`bikestop ${this.cityName}`, this.bikeData);
             });

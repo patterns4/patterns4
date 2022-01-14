@@ -23,7 +23,7 @@ function startBikes() {
 
         intcount++;
         if (! Math.round(Math.random() * 2)) {
-            fetch("http://localhost:1337/cykel/rent", {
+            fetch("http://express:1337/cykel/rent", {
                 method: 'POST',
                 body: new URLSearchParams(data)
             })
