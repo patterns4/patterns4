@@ -14,15 +14,10 @@ use App\Http\Controllers\{CitiesController, CustomersController, BikesController
 |
 */
 
+// Admin web interface
 Route::get('/', function () {
     return view('index');
 });
-
-Route::get('/admin', function() {
-    return view('admin');
-});
-
-// Admin web interface
 Route::get('/cities', [CitiesController::class, 'show']);
 Route::get('/cities/{id}', [CitiesController::class, 'citymap']);
 Route::post('/cities/addparking', [CitiesController::class, 'addparking']);
