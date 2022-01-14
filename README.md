@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/patterns4/patterns4/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/patterns4/patterns4/?branch=main)
+[![Build Status](https://scrutinizer-ci.com/g/patterns4/patterns4/badges/build.png?b=main)](https://scrutinizer-ci.com/g/patterns4/patterns4/build-status/main)
 # patterns4
 
 ## Start ##
