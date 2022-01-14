@@ -1,7 +1,7 @@
 let config = {
     "host":     "localhost",
     "user":     "root",
-    "password": "Bobbyk55",
+    "password": "", //enter local mysql password here
     "database": "ebike",
     "port": "3306"
 }
