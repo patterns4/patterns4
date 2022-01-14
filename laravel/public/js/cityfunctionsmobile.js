@@ -99,7 +99,7 @@ function prepBikes() {
 function searchBike(searchId) {
     searchId = parseInt(searchId);
     trackFreeBikes = false;
-    trackMovingBikes = true;
+    trackMovingBikes = false;
     trackParkedBikes = false;
     trackDepleted = false;
 
