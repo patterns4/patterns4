@@ -140,8 +140,8 @@ function resetButtons() {
     freeBikesBtn.addEventListener("click", plotFreeBikes);
     movingBtn.addEventListener("click", plotMoving);
     depletedBikesBtn.addEventListener("click", plotDepletedBikes);
-    trackFreeBikesBikes = false;
-    trackMovingBikesBikes = false;
+    trackFreeBikes = false;
+    trackMovingBikes = false;
     trackParkedBikes = false;
     trackDepleted = false;
 }

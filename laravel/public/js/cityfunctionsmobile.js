@@ -98,10 +98,6 @@ function prepBikes() {
 
 function searchBike(searchId) {
     searchId = parseInt(searchId);
-    trackFreeBikes = false;
-    trackMovingBikes = true;
-    trackParkedBikes = false;
-    trackDepleted = false;
 
     for (const row of Object.entries(bikeData)) {
         if (row[1].bikeId === searchId) {
