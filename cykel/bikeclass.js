@@ -12,11 +12,17 @@ class Cykel {
         this.battery = data.battery;
         this.moving = false;
         this.cityName = data.city_name;
-        this.travelMultiplier = 0.01;
+        this.travelMultiplier = 0.001;
         this.batteryDepletion = 0.1;
         this.io = io;
-        this.clone = Object.assign({}, this);
-        delete this.clone.io;
+        this.bikeData = {
+            bikeId: this.bikeId,
+            state: this.state,
+            battery: this.battery,
+            status: this.status,
+            position: this.position,
+            cityName: this.cityName,
+        };
     }
 
     // Getter
@@ -64,7 +70,7 @@ class Cykel {
         let destination = [ operator(position[0], Math.random() * this.travelMultiplier),
                             operator(position[1], Math.random() * this.travelMultiplier) ];
 
-        return destination.map(x => Math.round((x * 100000)) / 100000);
+        return destination.map(x => Math.round(x * 100000) / 100000);
     }
 
     calcCostAndLog() {
@@ -100,7 +106,8 @@ class Cykel {
         ];
 
         this.orgPos = this.position.map(x => Math.round(x * 100000) / 100000);
-        this.io.emit(`bikestart ${this.cityName}`, this.clone);
+
+        this.io.emit(`bikestart ${this.cityName}`, this.bikeData);
         this.travel(first, this.cityName, increment[first], Math.abs(diffArr[first]))
         .then(() => {
         this.travel(second, this.cityName, increment[second], Math.abs(diffArr[second]))
@@ -111,8 +118,9 @@ class Cykel {
 
                 console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state}, at position:`);
                 console.log(this.position);
+                console.log(this.bikeData);
 
-                this.io.emit(`bikestop ${this.cityName}`, this.clone);
+                this.io.emit(`bikestop ${this.cityName}`, this.bikeData);
             });
         })
     }
@@ -129,10 +137,12 @@ class Cykel {
                     resolve();
                     return;
                 }
-                this.clone.position[ind] += increment;
-                this.clone.battery -= this.batteryDepletion;
-                this.clone.battery = parseFloat(this.clone.battery.toFixed(1));
-                this.io.emit(cityName, JSON.stringify(this.clone));
+
+                this.bikeData.position[ind] += increment;
+                this.bikeData.battery -= this.batteryDepletion;
+                this.bikeData.battery = parseFloat(this.bikeData.battery.toFixed(1));
+
+                this.io.emit(cityName, JSON.stringify(this.bikeData));
                 callCount += 1;
 
             }, 1000);
@@ -144,9 +154,9 @@ class Cykel {
         let userId = data.userId;
         let datetime = data.datetime;
         this.rentedBy = userId;
-        this.clone.moving = true;
+        this.bikeData.moving = true;
         this.moving = true;
-        this.clone.state = "moving";
+        this.bikeData.state = "moving";
         this.rentDateTime = datetime;
         this.rentDTString = this.dtconv(datetime);
 
@@ -164,14 +174,15 @@ class Cykel {
     }
 
     setupStop() {
+        // this.clone.moving = false;
         this.moving = false;
-        this.clone.moving = false;
-        this.clone.position = this.clone.position.map(x => Math.round(x * 100000) / 100000);
-        this.clone.state = this.checkState(this.parking);
-        this.position = this.clone.position;
-        this.clone.battery = parseFloat(this.clone.battery.toFixed(1));
-        this.battery = this.clone.battery;
-        this.state = this.clone.state;
+        this.bikeData.moving = false;
+        this.bikeData.position = this.bikeData.position.map(x => Math.round(x * 100000) / 100000);
+        this.position = this.bikeData.position;
+        this.bikeData.state = this.checkState(this.parking);
+        this.state = this.bikeData.state;
+        this.battery = parseFloat(this.bikeData.battery.toFixed(1));
+        // this.state = this.clone.state;
     }
 
     async stop(data) {
@@ -183,7 +194,7 @@ class Cykel {
         console.log(`Bike nr ${this.bikeId} has stopped in state: ${this.state} at position:`);
         console.log(this.position);
 
-        this.io.emit(`bikestop ${this.cityName}`, this.clone);
+        this.io.emit(`bikestop ${this.cityName}`, this.bikeData);
 
         return data;
     }

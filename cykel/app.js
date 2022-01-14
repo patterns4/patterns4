@@ -79,22 +79,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// (async () => {
-//     try {
-//         await connect();
-//         let bikes = await getBikes();
-//         parking = await getParkings();
-
-//         for (const row of bikes) {
-//             let bike = new Cykel(row, haversine, parking, updateBike, logTrip, socket);
-//             delete bike.socket;
-//             myMap.set(bike.bikeId, bike);
-//         }
-//     } catch (e) {
-//         console.log(e);
-//     }
-// })();
-
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });

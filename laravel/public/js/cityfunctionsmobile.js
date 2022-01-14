@@ -33,6 +33,7 @@ function prepParking() {
 }
 
 function hireBike(bike_id) {
+    // hiredBike = bike_id;
     let hireData = {
         "bikeId": bike_id,
         "userId": user
@@ -41,14 +42,13 @@ function hireBike(bike_id) {
         method: 'POST',
         body: new URLSearchParams(hireData)
     });
-    hiredBike = bike_id;
 
-    searchBike(bike_id.toString());
+    searchBike(bike_id);
 }
 
 function stopBike(bike_id) {
     let hireData = {
-        "bikeId": bike_id.toString()
+        "bikeId": bike_id,
     };
     fetch("http://127.0.0.1:1337/cykel/stop", {
         method: 'POST',
@@ -100,18 +100,19 @@ function prepBikes() {
 }
 
 function searchBike(searchId) {
-    searchId = parseInt(searchId);
-    console.log(Object.entries(bikeData));
     trackParkedBikes = false;
     trackFreeBikes = false;
+    // console.log(bikePopups);
 
     for (const row of Object.entries(bikeData)) {
         if (row[1].bikeId === searchId) {
+            console.log("bike")
             if (row[1].removed === true) {
                 let marker = bikeMarkers[row[1].bikeId];
                 bikeLayer.addLayer(marker);
                 row[1].removed = false;
             }
+            bikeMarkers[row[1].bikeId].setStyle({ color: "#9B59B6" });
             continue;
         }
         let marker = bikeMarkers[row[1].bikeId];

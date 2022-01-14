@@ -8,6 +8,7 @@ function toggleButton(button, callbacks, classlist) {
 function plotBikes(state) {
     for (const row of Object.entries(bikeData)) {
         if (row[1].state === state && row[1].removed) {
+            console.log("yea");
             let marker = bikeMarkers[row[1].bikeId];
             bikeLayer.addLayer(marker);
             row[1].removed = false;
@@ -89,6 +90,7 @@ function prepParking() {
 
 function prepBikes() {
     for (const row of Object.entries(bikeData)) {
+        // let latlong = row[1].position;
         let latlong = row[1].position;
         let circleColor = "#3388ff";
         if (row[1].state === "moving") {

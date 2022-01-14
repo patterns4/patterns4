@@ -48,6 +48,10 @@ socket.on(`bikestop ${city.city_name}`, bike => {
         bikeLayer.removeLayer(marker);
         bikeData[bike.bikeId].removed = true;
     }
+    if (bike.state === "parked" && trackParkedBikes === false) {
+        bikeLayer.removeLayer(marker);
+        bikeData[bike.bikeId].removed = true;
+    }
 });
 
 socket.on(city.city_name, data => {

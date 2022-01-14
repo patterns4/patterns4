@@ -15,12 +15,7 @@ socket.once('bikelocation', data => {
 });
 
 socket.on(`bikestart ${city.city_name}`, bike => {
-    let marker = bikeMarkers[bike.bikeId];
-
-    bikeData[bike.bikeId].state = "moving";
-    marker.setStyle({ color: "#9B59B6" });
-    bikeLayer.addLayer(marker);
-    bikeData[bike.bikeId].removed = false;
+    moveBike(bike);
     return;
 });
 
